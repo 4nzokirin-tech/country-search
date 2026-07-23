@@ -8,7 +8,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Country Search</title>
+    <title>Country Copy</title>
 
     <style>
         * {
@@ -72,10 +72,16 @@
             cursor: pointer;
 
             padding: 3px;
+
+            transition: 0.15s;
         }
 
         .country-button:active {
             transform: scale(0.95);
+        }
+
+        .country-button.copied {
+            background: #b7f7c1;
         }
     </style>
 </head>
@@ -84,147 +90,87 @@
 
     <div class="app">
 
-        <h1>Country Search</h1>
+        <h1>Country Copy</h1>
 
         <div class="country-list">
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Togo')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Togo
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Tonga')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Tonga
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Trinidad and Tobago')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Trinidad and Tobago
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Tunisia')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Tunisia
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Turkey')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Turkey
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Turkmenistan')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Turkmenistan
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Tuvalu')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Tuvalu
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Uganda')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Uganda
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Ukraine')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Ukraine
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('United Arab Emirates')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 United Arab Emirates
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('United Kingdom')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 United Kingdom
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('United States of America')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 United States of America
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Uruguay')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Uruguay
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Uzbekistan')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Uzbekistan
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Vanuatu')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Vanuatu
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Venezuela')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Venezuela
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Vietnam')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Vietnam
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Yemen')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Yemen
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Zambia')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Zambia
             </button>
 
-            <button
-                class="country-button"
-                onclick="searchCountry('Zimbabwe')"
-            >
+            <button class="country-button" onclick="copyCountry(this)">
                 Zimbabwe
             </button>
 
@@ -235,20 +181,28 @@
 
     <script>
 
-        function searchCountry(country) {
+        function copyCountry(button) {
 
-            /*
-                Open Bing search.
+            // Get the text inside the button
+            const country = button.innerText.trim();
 
-                The country name is placed
-                directly into Bing's search query.
-            */
+            // Copy the country name to clipboard
+            navigator.clipboard.writeText(country);
 
-            const bingURL =
-                "https://www.bing.com/search?q=" +
-                encodeURIComponent(country);
+            // Temporarily change button appearance
+            const originalText = button.innerText;
 
-            window.location.href = bingURL;
+            button.innerText = "Copied!";
+            button.classList.add("copied");
+
+            // Return to original text after 1 second
+            setTimeout(() => {
+
+                button.innerText = originalText;
+                button.classList.remove("copied");
+
+            }, 1000);
+
         }
 
     </script>
