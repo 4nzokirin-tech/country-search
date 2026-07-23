@@ -34,7 +34,7 @@
 
         .app {
             width: 100%;
-            max-width: 500px;
+            max-width: 700px;
             height: 100dvh;
             padding: 12px;
             display: flex;
@@ -49,15 +49,22 @@
 
         .country-list {
             flex: 1;
+
             display: grid;
-            grid-template-columns: 1fr 1fr;
+
+            /* 4 columns */
+            grid-template-columns: repeat(4, 1fr);
+
+            /* 10 rows */
             grid-template-rows: repeat(10, 1fr);
+
             gap: 6px;
         }
 
         .country-button {
             width: 100%;
             height: 100%;
+
             border: none;
             border-radius: 10px;
 
@@ -95,83 +102,163 @@
         <div class="country-list">
 
             <button class="country-button" onclick="copyCountry(this)">
-                Togo
+                Afghanistan
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Tonga
+                Albania
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Trinidad and Tobago
+                Algeria
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Tunisia
+                Andorra
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Turkey
+                Angola
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Turkmenistan
+                Argentina
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Tuvalu
+                Armenia
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Uganda
+                Australia
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Ukraine
+                Austria
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                United Arab Emirates
+                Azerbaijan
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                United Kingdom
+                Bahamas
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                United States of America
+                Bahrain
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Uruguay
+                Bangladesh
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Uzbekistan
+                Barbados
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Vanuatu
+                Belarus
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Venezuela
+                Belgium
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Vietnam
+                Belize
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Yemen
+                Benin
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Zambia
+                Bhutan
             </button>
 
             <button class="country-button" onclick="copyCountry(this)">
-                Zimbabwe
+                Bolivia
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Botswana
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Brazil
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Brunei
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Bulgaria
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Cambodia
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Cameroon
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Canada
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Chad
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Chile
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                China
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Colombia
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Croatia
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Cuba
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Cyprus
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Denmark
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Ecuador
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Egypt
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Estonia
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Ethiopia
+            </button>
+
+            <button class="country-button" onclick="copyCountry(this)">
+                Fiji
             </button>
 
         </div>
@@ -183,19 +270,15 @@
 
         function copyCountry(button) {
 
-            // Get the text inside the button
             const country = button.innerText.trim();
 
-            // Copy the country name to clipboard
             navigator.clipboard.writeText(country);
 
-            // Temporarily change button appearance
             const originalText = button.innerText;
 
             button.innerText = "Copied!";
             button.classList.add("copied");
 
-            // Return to original text after 1 second
             setTimeout(() => {
 
                 button.innerText = originalText;
