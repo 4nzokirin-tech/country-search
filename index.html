@@ -15,7 +15,8 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -28,6 +29,7 @@
             background: #f5f5f5;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         .app {
@@ -58,12 +60,18 @@
             height: 100%;
             border: none;
             border-radius: 10px;
+
             background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+
+            box-shadow:
+                0 2px 5px rgba(0, 0, 0, 0.15);
+
             font-size: 14px;
             font-weight: bold;
+
             cursor: pointer;
-            padding: 2px;
+
+            padding: 3px;
         }
 
         .country-button:active {
@@ -82,142 +90,142 @@
 
             <button
                 class="country-button"
-                onclick="searchCountry('Bhutan')"
+                onclick="searchCountry('Togo')"
             >
-                Bhutan
+                Togo
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Benin')"
+                onclick="searchCountry('Tonga')"
             >
-                Benin
+                Tonga
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Belize')"
+                onclick="searchCountry('Trinidad and Tobago')"
             >
-                Belize
+                Trinidad and Tobago
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Belgium')"
+                onclick="searchCountry('Tunisia')"
             >
-                Belgium
+                Tunisia
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Belarus')"
+                onclick="searchCountry('Turkey')"
             >
-                Belarus
+                Turkey
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Barbados')"
+                onclick="searchCountry('Turkmenistan')"
             >
-                Barbados
+                Turkmenistan
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Bangladesh')"
+                onclick="searchCountry('Tuvalu')"
             >
-                Bangladesh
+                Tuvalu
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Bahrain')"
+                onclick="searchCountry('Uganda')"
             >
-                Bahrain
+                Uganda
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Bahamas')"
+                onclick="searchCountry('Ukraine')"
             >
-                Bahamas
+                Ukraine
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Azerbaijan')"
+                onclick="searchCountry('United Arab Emirates')"
             >
-                Azerbaijan
+                United Arab Emirates
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Austria')"
+                onclick="searchCountry('United Kingdom')"
             >
-                Austria
+                United Kingdom
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Australia')"
+                onclick="searchCountry('United States of America')"
             >
-                Australia
+                United States of America
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Armenia')"
+                onclick="searchCountry('Uruguay')"
             >
-                Armenia
+                Uruguay
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Argentina')"
+                onclick="searchCountry('Uzbekistan')"
             >
-                Argentina
+                Uzbekistan
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Antigua and Barbuda')"
+                onclick="searchCountry('Vanuatu')"
             >
-                Antigua and Barbuda
+                Vanuatu
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Angola')"
+                onclick="searchCountry('Venezuela')"
             >
-                Angola
+                Venezuela
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Andorra')"
+                onclick="searchCountry('Vietnam')"
             >
-                Andorra
+                Vietnam
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Algeria')"
+                onclick="searchCountry('Yemen')"
             >
-                Algeria
+                Yemen
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Albania')"
+                onclick="searchCountry('Zambia')"
             >
-                Albania
+                Zambia
             </button>
 
             <button
                 class="country-button"
-                onclick="searchCountry('Afghanistan')"
+                onclick="searchCountry('Zimbabwe')"
             >
-                Afghanistan
+                Zimbabwe
             </button>
 
         </div>
@@ -229,8 +237,13 @@
 
         function searchCountry(country) {
 
-            // Open Bing with the country name
-            // already placed in Bing's search box.
+            /*
+                Open Bing search.
+
+                The country name is placed
+                directly into Bing's search query.
+            */
+
             const bingURL =
                 "https://www.bing.com/search?q=" +
                 encodeURIComponent(country);
