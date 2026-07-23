@@ -41,45 +41,8 @@
 
         h1 {
             text-align: center;
-            margin: 3px 0 8px;
+            margin: 5px 0 12px;
             font-size: 24px;
-        }
-
-        .search-area {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 10px;
-            height: 45px;
-        }
-
-        #searchInput {
-            flex: 1;
-            min-width: 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 0 12px;
-            font-size: 16px;
-            outline: none;
-            background: white;
-        }
-
-        #searchInput:focus {
-            border-color: #555;
-        }
-
-        .search-button {
-            width: 110px;
-            border: none;
-            border-radius: 8px;
-            background: #333;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .search-button:active {
-            transform: scale(0.95);
         }
 
         .country-list {
@@ -115,162 +78,144 @@
 
         <h1>Country Search</h1>
 
-        <div class="search-area">
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Enter search..."
-            >
-
-            <button
-                class="search-button"
-                onclick="searchBing()"
-            >
-                Search Bing
-            </button>
-
-        </div>
-
-        <!-- Countries arranged in reverse alphabetical order Z → A -->
         <div class="country-list">
 
             <button
                 class="country-button"
-                onclick="selectCountry('Bhutan')"
+                onclick="searchCountry('Bhutan')"
             >
                 Bhutan
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Benin')"
+                onclick="searchCountry('Benin')"
             >
                 Benin
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Belize')"
+                onclick="searchCountry('Belize')"
             >
                 Belize
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Belgium')"
+                onclick="searchCountry('Belgium')"
             >
                 Belgium
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Belarus')"
+                onclick="searchCountry('Belarus')"
             >
                 Belarus
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Barbados')"
+                onclick="searchCountry('Barbados')"
             >
                 Barbados
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Bangladesh')"
+                onclick="searchCountry('Bangladesh')"
             >
                 Bangladesh
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Bahrain')"
+                onclick="searchCountry('Bahrain')"
             >
                 Bahrain
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Bahamas')"
+                onclick="searchCountry('Bahamas')"
             >
                 Bahamas
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Azerbaijan')"
+                onclick="searchCountry('Azerbaijan')"
             >
                 Azerbaijan
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Austria')"
+                onclick="searchCountry('Austria')"
             >
                 Austria
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Australia')"
+                onclick="searchCountry('Australia')"
             >
                 Australia
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Armenia')"
+                onclick="searchCountry('Armenia')"
             >
                 Armenia
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Argentina')"
+                onclick="searchCountry('Argentina')"
             >
                 Argentina
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Antigua and Barbuda')"
+                onclick="searchCountry('Antigua and Barbuda')"
             >
                 Antigua and Barbuda
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Angola')"
+                onclick="searchCountry('Angola')"
             >
                 Angola
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Andorra')"
+                onclick="searchCountry('Andorra')"
             >
                 Andorra
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Algeria')"
+                onclick="searchCountry('Algeria')"
             >
                 Algeria
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Albania')"
+                onclick="searchCountry('Albania')"
             >
                 Albania
             </button>
 
             <button
                 class="country-button"
-                onclick="selectCountry('Afghanistan')"
+                onclick="searchCountry('Afghanistan')"
             >
                 Afghanistan
             </button>
@@ -282,48 +227,16 @@
 
     <script>
 
-        function selectCountry(country) {
+        function searchCountry(country) {
 
-            const searchInput =
-                document.getElementById("searchInput");
-
-            searchInput.value = country;
-
-            searchInput.focus();
-            searchInput.select();
-        }
-
-
-        function searchBing() {
-
-            const searchInput =
-                document.getElementById("searchInput");
-
-            const keyword =
-                searchInput.value.trim();
-
-            if (keyword === "") {
-                searchInput.focus();
-                return;
-            }
-
+            // Open Bing with the country name
+            // already placed in Bing's search box.
             const bingURL =
                 "https://www.bing.com/search?q=" +
-                encodeURIComponent(keyword);
+                encodeURIComponent(country);
 
             window.location.href = bingURL;
         }
-
-
-        document
-            .getElementById("searchInput")
-            .addEventListener("keydown", function(event) {
-
-                if (event.key === "Enter") {
-                    searchBing();
-                }
-
-            });
 
     </script>
 
