@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- Make the page fit properly on mobile phones -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Country Search</title>
@@ -37,10 +39,49 @@
 
         h1 {
             text-align: center;
-            margin: 5px 0 10px;
+            margin: 3px 0 8px;
             font-size: 24px;
         }
 
+        /* Search area */
+        .search-area {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+            height: 45px;
+        }
+
+        #searchInput {
+            flex: 1;
+            min-width: 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 0 12px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+        }
+
+        #searchInput:focus {
+            border-color: #555;
+        }
+
+        .search-button {
+            width: 110px;
+            border: none;
+            border-radius: 8px;
+            background: #333;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Country buttons */
         .country-list {
             flex: 1;
             display: grid;
@@ -49,7 +90,7 @@
             gap: 6px;
         }
 
-        button {
+        .country-button {
             width: 100%;
             height: 100%;
             border: none;
@@ -62,7 +103,7 @@
             padding: 2px;
         }
 
-        button:active {
+        .country-button:active {
             transform: scale(0.95);
         }
     </style>
@@ -74,50 +115,228 @@
 
         <h1>Country Search</h1>
 
+        <!-- Search bar -->
+        <div class="search-area">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Enter search..."
+            >
+
+            <button
+                class="search-button"
+                onclick="searchBing()"
+            >
+                Search Bing
+            </button>
+
+        </div>
+
+        <!-- 20 Country Buttons -->
         <div class="country-list">
 
-            <button onclick="searchCountry('Afghanistan')">Afghanistan</button>
-            <button onclick="searchCountry('Albania')">Albania</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Afghanistan')"
+            >
+                Afghanistan
+            </button>
 
-            <button onclick="searchCountry('Algeria')">Algeria</button>
-            <button onclick="searchCountry('Andorra')">Andorra</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Albania')"
+            >
+                Albania
+            </button>
 
-            <button onclick="searchCountry('Angola')">Angola</button>
-            <button onclick="searchCountry('Antigua and Barbuda')">Antigua and Barbuda</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Algeria')"
+            >
+                Algeria
+            </button>
 
-            <button onclick="searchCountry('Argentina')">Argentina</button>
-            <button onclick="searchCountry('Armenia')">Armenia</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Andorra')"
+            >
+                Andorra
+            </button>
 
-            <button onclick="searchCountry('Australia')">Australia</button>
-            <button onclick="searchCountry('Austria')">Austria</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Angola')"
+            >
+                Angola
+            </button>
 
-            <button onclick="searchCountry('Azerbaijan')">Azerbaijan</button>
-            <button onclick="searchCountry('Bahamas')">Bahamas</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Antigua and Barbuda')"
+            >
+                Antigua and Barbuda
+            </button>
 
-            <button onclick="searchCountry('Bahrain')">Bahrain</button>
-            <button onclick="searchCountry('Bangladesh')">Bangladesh</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Argentina')"
+            >
+                Argentina
+            </button>
 
-            <button onclick="searchCountry('Barbados')">Barbados</button>
-            <button onclick="searchCountry('Belarus')">Belarus</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Armenia')"
+            >
+                Armenia
+            </button>
 
-            <button onclick="searchCountry('Belgium')">Belgium</button>
-            <button onclick="searchCountry('Belize')">Belize</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Australia')"
+            >
+                Australia
+            </button>
 
-            <button onclick="searchCountry('Benin')">Benin</button>
-            <button onclick="searchCountry('Bhutan')">Bhutan</button>
+            <button
+                class="country-button"
+                onclick="selectCountry('Austria')"
+            >
+                Austria
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Azerbaijan')"
+            >
+                Azerbaijan
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Bahamas')"
+            >
+                Bahamas
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Bahrain')"
+            >
+                Bahrain
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Bangladesh')"
+            >
+                Bangladesh
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Barbados')"
+            >
+                Barbados
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Belarus')"
+            >
+                Belarus
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Belgium')"
+            >
+                Belgium
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Belize')"
+            >
+                Belize
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Benin')"
+            >
+                Benin
+            </button>
+
+            <button
+                class="country-button"
+                onclick="selectCountry('Bhutan')"
+            >
+                Bhutan
+            </button>
 
         </div>
 
     </div>
 
-    <script>
-        function searchCountry(country) {
-            const bingSearch =
-                "https://www.bing.com/search?q=" +
-                encodeURIComponent(country);
 
-            window.location.href = bingSearch;
+    <script>
+
+        // When a country button is pressed,
+        // put the country name into the search bar.
+        function selectCountry(country) {
+
+            const searchInput =
+                document.getElementById("searchInput");
+
+            searchInput.value = country;
+
+            // Automatically highlight the text
+            // so you can easily replace or edit it.
+            searchInput.focus();
+            searchInput.select();
         }
+
+
+        // Search whatever is currently inside
+        // the search bar on Bing.
+        function searchBing() {
+
+            const searchInput =
+                document.getElementById("searchInput");
+
+            const keyword =
+                searchInput.value.trim();
+
+            // Do nothing if the search bar is empty.
+            if (keyword === "") {
+                searchInput.focus();
+                return;
+            }
+
+            // Create Bing search URL.
+            const bingURL =
+                "https://www.bing.com/search?q=" +
+                encodeURIComponent(keyword);
+
+            // Open Bing search.
+            window.location.href = bingURL;
+        }
+
+
+        // Allow pressing the Enter key
+        // to search Bing.
+        document
+            .getElementById("searchInput")
+            .addEventListener("keydown", function(event) {
+
+                if (event.key === "Enter") {
+                    searchBing();
+                }
+
+            });
+
     </script>
 
 </body>
