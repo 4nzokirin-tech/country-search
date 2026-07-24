@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,11 +12,13 @@
 
     <title>Country Copy</title>
 
+
     <style>
 
         * {
             box-sizing: border-box;
         }
+
 
         html,
         body {
@@ -30,6 +34,7 @@
             font-family: Arial, sans-serif;
         }
 
+
         body {
 
             background: #f5f5f5;
@@ -40,9 +45,11 @@
             align-items: center;
         }
 
+
         .app {
 
             width: 100%;
+
             max-width: 900px;
 
             height: 100dvh;
@@ -50,17 +57,85 @@
             padding: 12px;
 
             display: flex;
+
             flex-direction: column;
         }
 
-        h1 {
 
-            text-align: center;
+        /* TITLE AND NAVIGATION BUTTONS */
+
+        .header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 20px;
 
             margin: 5px 0 12px;
+        }
+
+
+        h1 {
+
+            margin: 0;
 
             font-size: 24px;
+
+            text-align: center;
         }
+
+
+        .navigation-button {
+
+            width: 45px;
+
+            height: 38px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: white;
+
+            box-shadow:
+
+                0 2px 5px
+                rgba(0, 0, 0, 0.15);
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.15s;
+        }
+
+
+        .navigation-button:active {
+
+            transform: scale(0.92);
+        }
+
+
+        /* DISABLED BUTTON */
+
+        .navigation-button:disabled {
+
+            background: #999;
+
+            color: #555;
+
+            cursor: not-allowed;
+
+            box-shadow: none;
+        }
+
+
+        /* COUNTRY GRID */
 
         .country-list {
 
@@ -68,18 +143,26 @@
 
             display: grid;
 
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns:
 
-            grid-template-rows: repeat(15, 1fr);
+                repeat(4, 1fr);
 
-            grid-auto-flow: column;
+            grid-template-rows:
+
+                repeat(15, 1fr);
 
             gap: 6px;
+
+            min-height: 0;
         }
+
+
+        /* COUNTRY BUTTON */
 
         .country-button {
 
             width: 100%;
+
             height: 100%;
 
             border: none;
@@ -89,7 +172,9 @@
             background: white;
 
             box-shadow:
-                0 2px 5px rgba(0, 0, 0, 0.15);
+
+                0 2px 5px
+                rgba(0, 0, 0, 0.15);
 
             font-size: 13px;
 
@@ -102,325 +187,834 @@
             transition: 0.15s;
         }
 
+
         .country-button:active {
 
             transform: scale(0.95);
         }
+
 
         .country-button.copied {
 
             background: #b7f7c1;
         }
 
+
     </style>
 
 </head>
 
+
 <body>
+
 
     <div class="app">
 
-        <h1>Country Copy</h1>
 
-        <div class="country-list">
+        <!-- HEADER -->
+
+        <div class="header">
 
 
-            <!-- COLUMN 1: 1 - 15 -->
+            <button
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Afghanistan
-            </button>
+                id="leftButton"
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Albania
-            </button>
+                class="navigation-button"
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Algeria
-            </button>
+                onclick="moveLeft()"
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Andorra
-            </button>
+            >
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Angola
-            </button>
+                ←
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Argentina
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Armenia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Australia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Austria
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Azerbaijan
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Bahamas
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Bahrain
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Bangladesh
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Barbados
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Belarus
             </button>
 
 
-            <!-- COLUMN 2: 16 - 30 -->
+            <h1>
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Belgium
-            </button>
+                Country Copy
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Belize
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Benin
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Bhutan
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Bolivia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Botswana
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Brazil
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Brunei
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Bulgaria
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Cambodia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Cameroon
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Canada
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Chad
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Chile
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                China
-            </button>
+            </h1>
 
 
-            <!-- COLUMN 3: 31 - 45 -->
+            <button
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Colombia
-            </button>
+                id="rightButton"
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Croatia
-            </button>
+                class="navigation-button"
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Cuba
-            </button>
+                onclick="moveRight()"
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Cyprus
-            </button>
+            >
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Denmark
-            </button>
+                →
 
-            <button class="country-button" onclick="copyCountry(this)">
-                Ecuador
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Egypt
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Estonia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Ethiopia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Fiji
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Finland
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                France
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Gabon
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Gambia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Georgia
-            </button>
-
-
-            <!-- COLUMN 4: 46 - 60 -->
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Germany
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Ghana
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Greece
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Grenada
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Guatemala
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Guinea
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Guyana
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Haiti
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Honduras
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Hungary
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Iceland
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                India
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Indonesia
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Iran
-            </button>
-
-            <button class="country-button" onclick="copyCountry(this)">
-                Iraq
             </button>
 
 
         </div>
+
+
+        <!-- COUNTRY BUTTONS -->
+
+        <div
+
+            id="countryList"
+
+            class="country-list"
+
+        >
+
+        </div>
+
 
     </div>
 
 
     <script>
 
+
+        /*
+        =====================================================
+
+        ALL 180 COUNTRIES
+
+        12 COLUMNS
+
+        15 COUNTRIES PER COLUMN
+
+        =====================================================
+        */
+
+
+        const countries = [
+
+
+            // COLUMN 1
+
+            "Afghanistan",
+
+            "Albania",
+
+            "Algeria",
+
+            "Andorra",
+
+            "Angola",
+
+            "Antigua and Barbuda",
+
+            "Argentina",
+
+            "Armenia",
+
+            "Australia",
+
+            "Austria",
+
+            "Azerbaijan",
+
+            "Bahamas",
+
+            "Bahrain",
+
+            "Bangladesh",
+
+            "Barbados",
+
+
+            // COLUMN 2
+
+            "Belarus",
+
+            "Belgium",
+
+            "Belize",
+
+            "Benin",
+
+            "Bhutan",
+
+            "Bolivia",
+
+            "Bosnia and Herzegovina",
+
+            "Botswana",
+
+            "Brazil",
+
+            "Brunei",
+
+            "Bulgaria",
+
+            "Burkina Faso",
+
+            "Burundi",
+
+            "Cabo Verde",
+
+            "Cambodia",
+
+
+            // COLUMN 3
+
+            "Cameroon",
+
+            "Canada",
+
+            "Central African Republic",
+
+            "Chad",
+
+            "Chile",
+
+            "China",
+
+            "Colombia",
+
+            "Comoros",
+
+            "Congo",
+
+            "Costa Rica",
+
+            "Croatia",
+
+            "Cuba",
+
+            "Cyprus",
+
+            "Czechia",
+
+            "Denmark",
+
+
+            // COLUMN 4
+
+            "Djibouti",
+
+            "Dominica",
+
+            "Dominican Republic",
+
+            "Ecuador",
+
+            "Egypt",
+
+            "El Salvador",
+
+            "Equatorial Guinea",
+
+            "Eritrea",
+
+            "Estonia",
+
+            "Eswatini",
+
+            "Ethiopia",
+
+            "Fiji",
+
+            "Finland",
+
+            "France",
+
+            "Gabon",
+
+
+            // COLUMN 5
+
+            "Gambia",
+
+            "Georgia",
+
+            "Germany",
+
+            "Ghana",
+
+            "Greece",
+
+            "Grenada",
+
+            "Guatemala",
+
+            "Guinea",
+
+            "Guinea-Bissau",
+
+            "Guyana",
+
+            "Haiti",
+
+            "Honduras",
+
+            "Hungary",
+
+            "Iceland",
+
+            "India",
+
+
+            // COLUMN 6
+
+            "Indonesia",
+
+            "Iran",
+
+            "Iraq",
+
+            "Ireland",
+
+            "Israel",
+
+            "Italy",
+
+            "Jamaica",
+
+            "Japan",
+
+            "Jordan",
+
+            "Kazakhstan",
+
+            "Kenya",
+
+            "Kiribati",
+
+            "Kuwait",
+
+            "Kyrgyzstan",
+
+            "Laos",
+
+
+            // COLUMN 7
+
+            "Latvia",
+
+            "Lebanon",
+
+            "Lesotho",
+
+            "Liberia",
+
+            "Libya",
+
+            "Liechtenstein",
+
+            "Lithuania",
+
+            "Luxembourg",
+
+            "Madagascar",
+
+            "Malawi",
+
+            "Malaysia",
+
+            "Maldives",
+
+            "Mali",
+
+            "Malta",
+
+            "Marshall Islands",
+
+
+            // COLUMN 8
+
+            "Mauritania",
+
+            "Mauritius",
+
+            "Mexico",
+
+            "Micronesia",
+
+            "Moldova",
+
+            "Monaco",
+
+            "Mongolia",
+
+            "Montenegro",
+
+            "Morocco",
+
+            "Mozambique",
+
+            "Myanmar",
+
+            "Namibia",
+
+            "Nauru",
+
+            "Nepal",
+
+            "Netherlands",
+
+
+            // COLUMN 9
+
+            "New Zealand",
+
+            "Nicaragua",
+
+            "Niger",
+
+            "Nigeria",
+
+            "North Korea",
+
+            "North Macedonia",
+
+            "Norway",
+
+            "Oman",
+
+            "Pakistan",
+
+            "Palau",
+
+            "Panama",
+
+            "Papua New Guinea",
+
+            "Paraguay",
+
+            "Peru",
+
+            "Philippines",
+
+
+            // COLUMN 10
+
+            "Poland",
+
+            "Portugal",
+
+            "Qatar",
+
+            "Romania",
+
+            "Russia",
+
+            "Rwanda",
+
+            "Saint Kitts and Nevis",
+
+            "Saint Lucia",
+
+            "Saint Vincent and the Grenadines",
+
+            "Samoa",
+
+            "San Marino",
+
+            "Sao Tome and Principe",
+
+            "Saudi Arabia",
+
+            "Senegal",
+
+            "Serbia",
+
+
+            // COLUMN 11
+
+            "Seychelles",
+
+            "Sierra Leone",
+
+            "Singapore",
+
+            "Slovakia",
+
+            "Slovenia",
+
+            "Solomon Islands",
+
+            "Somalia",
+
+            "South Africa",
+
+            "South Korea",
+
+            "South Sudan",
+
+            "Spain",
+
+            "Sri Lanka",
+
+            "Sudan",
+
+            "Suriname",
+
+            "Sweden",
+
+
+            // COLUMN 12
+
+            "Switzerland",
+
+            "Syria",
+
+            "Tajikistan",
+
+            "Tanzania",
+
+            "Thailand",
+
+            "Timor-Leste",
+
+            "Togo",
+
+            "Tonga",
+
+            "Trinidad and Tobago",
+
+            "Tunisia",
+
+            "Turkey",
+
+            "Turkmenistan",
+
+            "Tuvalu",
+
+            "Uganda",
+
+            "Ukraine"
+
+        ];
+
+
+        /*
+        =====================================================
+
+        SETTINGS
+
+        =====================================================
+        */
+
+
+        const countriesPerColumn = 15;
+
+        const visibleColumns = 4;
+
+
+        let currentColumn = 0;
+
+
+        const totalColumns =
+
+            Math.ceil(
+
+                countries.length /
+
+                countriesPerColumn
+
+            );
+
+
+        const countryList =
+
+            document.getElementById(
+
+                "countryList"
+
+            );
+
+
+        const leftButton =
+
+            document.getElementById(
+
+                "leftButton"
+
+            );
+
+
+        const rightButton =
+
+            document.getElementById(
+
+                "rightButton"
+
+            );
+
+
+        /*
+        =====================================================
+
+        SHOW COUNTRIES
+
+        =====================================================
+        */
+
+
+        function showCountries() {
+
+
+            countryList.innerHTML = "";
+
+
+            const startIndex =
+
+                currentColumn *
+
+                countriesPerColumn;
+
+
+            const endIndex =
+
+                startIndex +
+
+                (
+
+                    countriesPerColumn *
+
+                    visibleColumns
+
+                );
+
+
+            const visibleCountries =
+
+                countries.slice(
+
+                    startIndex,
+
+                    endIndex
+
+                );
+
+
+            visibleCountries.forEach(
+
+                country => {
+
+
+                    const button =
+
+                        document.createElement(
+
+                            "button"
+
+                        );
+
+
+                    button.className =
+
+                        "country-button";
+
+
+                    button.innerText =
+
+                        country;
+
+
+                    button.onclick =
+
+                        function() {
+
+                            copyCountry(
+
+                                button
+
+                            );
+
+                        };
+
+
+                    countryList.appendChild(
+
+                        button
+
+                    );
+
+
+                }
+
+            );
+
+
+            updateNavigationButtons();
+
+        }
+
+
+        /*
+        =====================================================
+
+        MOVE LEFT
+
+        =====================================================
+        */
+
+
+        function moveLeft() {
+
+
+            if (
+
+                currentColumn > 0
+
+            ) {
+
+
+                currentColumn--;
+
+
+                showCountries();
+
+            }
+
+        }
+
+
+        /*
+        =====================================================
+
+        MOVE RIGHT
+
+        =====================================================
+        */
+
+
+        function moveRight() {
+
+
+            if (
+
+                currentColumn <
+
+                totalColumns -
+
+                visibleColumns
+
+            ) {
+
+
+                currentColumn++;
+
+
+                showCountries();
+
+            }
+
+        }
+
+
+        /*
+        =====================================================
+
+        ENABLE / DISABLE NAVIGATION
+
+        =====================================================
+        */
+
+
+        function updateNavigationButtons() {
+
+
+            leftButton.disabled =
+
+                currentColumn === 0;
+
+
+            rightButton.disabled =
+
+                currentColumn >=
+
+                totalColumns -
+
+                visibleColumns;
+
+        }
+
+
+        /*
+        =====================================================
+
+        COPY COUNTRY
+
+        =====================================================
+        */
+
+
         function copyCountry(button) {
 
+
             const country =
+
                 button.innerText.trim();
 
 
-            navigator.clipboard.writeText(country);
+            navigator.clipboard.writeText(
+
+                country
+
+            );
 
 
             const originalText =
+
                 button.innerText;
 
 
             button.innerText =
+
                 "Copied!";
 
 
             button.classList.add(
+
                 "copied"
+
             );
 
 
-            setTimeout(() => {
+            setTimeout(
 
-                button.innerText =
-                    originalText;
+                function() {
 
 
-                button.classList.remove(
-                    "copied"
-                );
+                    button.innerText =
 
-            }, 1000);
+                        originalText;
+
+
+                    button.classList.remove(
+
+                        "copied"
+
+                    );
+
+
+                },
+
+                1000
+
+            );
 
         }
 
+
+        /*
+        =====================================================
+
+        START THE PAGE
+
+        =====================================================
+        */
+
+
+        showCountries();
+
+
     </script>
+
 
 </body>
 
