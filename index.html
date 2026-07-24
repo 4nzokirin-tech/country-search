@@ -251,7 +251,6 @@
     const countriesPerColumn = 15;
     const visibleColumns = 4;
     const totalColumns = Math.ceil(countries.length / countriesPerColumn);
-    let currentColumn = getSavedColumn();
 
     const countryList = document.getElementById("countryList");
     const leftButton = document.getElementById("leftButton");
@@ -276,8 +275,7 @@
     */
 
     const STORAGE_KEY = "countryCopyLastClicked";
-
-    const COLUMN_STORAGE_KEY = "countryCopyCurrentColumn";
+    const POSITION_KEY = "countryCopyLastColumn";
 
     function getClickedTimes() {
         const savedData = localStorage.getItem(STORAGE_KEY);
@@ -296,37 +294,30 @@
 
     /*
     =====================================================
-    GET / SAVE CURRENT COLUMN POSITION
-    SO RELOADING THE PAGE KEEPS YOUR PLACE
+    SAVE / LOAD SCROLL POSITION (CURRENT COLUMN)
     =====================================================
     */
 
     function getSavedColumn() {
+        const saved = localStorage.getItem(POSITION_KEY);
+        if (saved === null) return 0;
 
-        const savedColumn = localStorage.getItem(COLUMN_STORAGE_KEY);
+        const parsed = parseInt(saved, 10);
+        if (isNaN(parsed)) return 0;
 
-        if (!savedColumn) {
-            return 0;
-        }
+        const maxColumn = Math.max(0, totalColumns - visibleColumns);
 
-        const parsedColumn = parseInt(savedColumn, 10);
-
-        if (isNaN(parsedColumn) || parsedColumn < 0) {
-            return 0;
-        }
-
-        const maxColumn = totalColumns - visibleColumns;
-
-        if (parsedColumn > maxColumn) {
-            return maxColumn;
-        }
-
-        return parsedColumn;
+        // Clamp in case the country list ever changes size
+        if (parsed < 0) return 0;
+        if (parsed > maxColumn) return maxColumn;
+        return parsed;
     }
 
-    function saveCurrentColumn() {
-        localStorage.setItem(COLUMN_STORAGE_KEY, currentColumn);
+    function saveColumn(column) {
+        localStorage.setItem(POSITION_KEY, String(column));
     }
+
+    let currentColumn = getSavedColumn();
 
     /*
     =====================================================
@@ -426,7 +417,7 @@
     function moveLeft() {
         if (currentColumn > 0) {
             currentColumn--;
-            saveCurrentColumn();
+            saveColumn(currentColumn);
             showCountries();
         }
     }
@@ -440,7 +431,7 @@
     function moveRight() {
         if (currentColumn < totalColumns - visibleColumns) {
             currentColumn++;
-            saveCurrentColumn();
+            saveColumn(currentColumn);
             showCountries();
         }
     }
@@ -496,7 +487,7 @@
 
         const confirmed = window.confirm(
 
-            "Clear all saved data? This will reset every country's colour back to normal."
+            "Clear all saved data? This will reset every country's colour back to normal and return to the first page."
 
         );
 
@@ -507,6 +498,8 @@
         }
 
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(POSITION_KEY);
+        currentColumn = 0;
 
         showCountries();
 
