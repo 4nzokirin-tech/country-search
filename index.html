@@ -1,1045 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Country Copy</title>
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        html,
-        body {
-
-            margin: 0;
-            padding: 0;
-
-            width: 100%;
-            height: 100%;
-
-            overflow: hidden;
-
-            font-family: Arial, sans-serif;
-        }
-
-
-        body {
-
-            background: #f5f5f5;
-
-            display: flex;
-
-            justify-content: center;
-            align-items: center;
-        }
-
-
-        .app {
-
-            width: 100%;
-
-            max-width: 900px;
-
-            height: 100dvh;
-
-            padding: 12px;
-
-            display: flex;
-
-            flex-direction: column;
-
-            overflow: hidden;
-        }
-
-
-        /* HEADER */
-
-        .header {
-
-            flex: 0 0 50px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            gap: 20px;
-
-            overflow: hidden;
-        }
-
-
-        h1 {
-
-            margin: 0;
-
-            font-size: 24px;
-
-            text-align: center;
-
-            white-space: nowrap;
-        }
-
-
-        /* NAVIGATION BUTTONS */
-
-        .navigation-button {
-
-            width: 45px;
-
-            height: 38px;
-
-            flex-shrink: 0;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background: white;
-
-            box-shadow:
-
-                0 2px 5px
-                rgba(0, 0, 0, 0.15);
-
-            font-size: 22px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.15s;
-        }
-
-
-        .navigation-button:active {
-
-            transform: scale(0.92);
-        }
-
-
-        /* DISABLED NAVIGATION BUTTON */
-
-        .navigation-button:disabled {
-
-            background: #999;
-
-            color: #555;
-
-            cursor: not-allowed;
-
-            box-shadow: none;
-        }
-
-
-        /* COUNTRY GRID */
-
-        .country-list {
-
-            flex: 1;
-
-            min-height: 0;
-
-            width: 100%;
-
-            display: grid;
-
-            grid-template-columns:
-
-                repeat(4, 1fr);
-
-            grid-template-rows:
-
-                repeat(15, 1fr);
-
-            gap: 6px;
-
-            overflow: hidden;
-        }
-
-
-        /* COUNTRY BUTTON */
-
-        .country-button {
-
-            width: 100%;
-
-            height: 100%;
-
-            min-width: 0;
-
-            min-height: 0;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background: white;
-
-            box-shadow:
-
-                0 2px 5px
-                rgba(0, 0, 0, 0.15);
-
-            font-size: 13px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            padding: 3px;
-
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-
-            white-space: nowrap;
-
-            transition: 0.15s;
-        }
-
-
-        .country-button:active {
-
-            transform: scale(0.95);
-        }
-
-
-        .country-button.copied {
-
-            background: #b7f7c1;
-        }
-
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Country Copy</title>
+<style>
+    * { box-sizing: border-box; }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 900px;
+        height: 100dvh;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* HEADER */
+    .header {
+        flex: 0 0 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        overflow: hidden;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 24px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* NAVIGATION BUTTONS */
+    .navigation-button {
+        width: 45px;
+        height: 38px;
+        flex-shrink: 0;
+        border: none;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        font-size: 22px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.15s;
+    }
+
+    .navigation-button:active { transform: scale(0.92); }
+
+    .navigation-button:disabled {
+        background: #999;
+        color: #555;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    /* COUNTRY GRID */
+    .country-list {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(15, 1fr);
+        gap: 6px;
+        overflow: hidden;
+    }
+
+    /* COUNTRY BUTTON */
+    .country-button {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        border: none;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 3px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: 0.15s;
+    }
+
+    .country-button:active { transform: scale(0.95); }
+
+    /*
+    =====================================================
+    COLOUR STATUS SYSTEM (INDICATOR ONLY - STILL CLICKABLE)
+    =====================================================
+    */
+
+    /* CLICKED - LESS THAN 24 HOURS */
+    .country-button.status-red {
+        background: #ff6b6b;
+        color: #000;
+    }
+
+    /* 24 HOURS TO LESS THAN 48 HOURS */
+    .country-button.status-orange {
+        background: #ffa94d;
+        color: #000;
+    }
+
+    /* 48 HOURS TO LESS THAN 72 HOURS */
+    .country-button.status-yellow {
+        background: #ffe066;
+        color: #000;
+    }
+
+    /* 72 HOURS TO LESS THAN 96 HOURS */
+    .country-button.status-light-yellow {
+        background: #fff3bf;
+        color: #000;
+    }
+
+</style>
 </head>
-
-
 <body>
 
+<div class="app">
 
-    <div class="app">
-
-
-        <!-- HEADER -->
-
-        <div class="header">
-
-
-            <button
-
-                id="leftButton"
-
-                class="navigation-button"
-
-                onclick="moveLeft()"
-
-            >
-
-                ←
-
-            </button>
-
-
-            <h1>
-
-                Country Copy
-
-            </h1>
-
-
-            <button
-
-                id="rightButton"
-
-                class="navigation-button"
-
-                onclick="moveRight()"
-
-            >
-
-                →
-
-            </button>
-
-
-        </div>
-
-
-        <!-- COUNTRY GRID -->
-
-        <div
-
-            id="countryList"
-
-            class="country-list"
-
-        >
-
-        </div>
-
-
+    <!-- HEADER -->
+    <div class="header">
+        <button id="leftButton" class="navigation-button" onclick="moveLeft()">←</button>
+        <h1>Country Copy</h1>
+        <button id="rightButton" class="navigation-button" onclick="moveRight()">→</button>
     </div>
 
-
-    <script>
-
-
-        /*
-        =====================================================
-
-        180 COUNTRIES
-
-        12 COLUMNS
-
-        15 COUNTRIES PER COLUMN
-
-        =====================================================
-        */
-
-
-        const countries = [
-
-
-            // COLUMN 1
-
-            "Afghanistan",
-
-            "Albania",
-
-            "Algeria",
-
-            "Andorra",
-
-            "Angola",
-
-            "Antigua and Barbuda",
-
-            "Argentina",
-
-            "Armenia",
-
-            "Australia",
-
-            "Austria",
-
-            "Azerbaijan",
-
-            "Bahamas",
-
-            "Bahrain",
-
-            "Bangladesh",
-
-            "Barbados",
-
-
-            // COLUMN 2
-
-            "Belarus",
-
-            "Belgium",
-
-            "Belize",
-
-            "Benin",
-
-            "Bhutan",
-
-            "Bolivia",
-
-            "Bosnia and Herzegovina",
-
-            "Botswana",
-
-            "Brazil",
-
-            "Brunei",
-
-            "Bulgaria",
-
-            "Burkina Faso",
-
-            "Burundi",
-
-            "Cabo Verde",
-
-            "Cambodia",
-
-
-            // COLUMN 3
-
-            "Cameroon",
-
-            "Canada",
-
-            "Central African Republic",
-
-            "Chad",
-
-            "Chile",
-
-            "China",
-
-            "Colombia",
-
-            "Comoros",
-
-            "Congo",
-
-            "Costa Rica",
-
-            "Croatia",
-
-            "Cuba",
-
-            "Cyprus",
-
-            "Czechia",
-
-            "Denmark",
-
-
-            // COLUMN 4
-
-            "Djibouti",
-
-            "Dominica",
-
-            "Dominican Republic",
-
-            "Ecuador",
-
-            "Egypt",
-
-            "El Salvador",
-
-            "Equatorial Guinea",
-
-            "Eritrea",
-
-            "Estonia",
-
-            "Eswatini",
-
-            "Ethiopia",
-
-            "Fiji",
-
-            "Finland",
-
-            "France",
-
-            "Gabon",
-
-
-            // COLUMN 5
-
-            "Gambia",
-
-            "Georgia",
-
-            "Germany",
-
-            "Ghana",
-
-            "Greece",
-
-            "Grenada",
-
-            "Guatemala",
-
-            "Guinea",
-
-            "Guinea-Bissau",
-
-            "Guyana",
-
-            "Haiti",
-
-            "Honduras",
-
-            "Hungary",
-
-            "Iceland",
-
-            "India",
-
-
-            // COLUMN 6
-
-            "Indonesia",
-
-            "Iran",
-
-            "Iraq",
-
-            "Ireland",
-
-            "Israel",
-
-            "Italy",
-
-            "Jamaica",
-
-            "Japan",
-
-            "Jordan",
-
-            "Kazakhstan",
-
-            "Kenya",
-
-            "Kiribati",
-
-            "Kuwait",
-
-            "Kyrgyzstan",
-
-            "Laos",
-
-
-            // COLUMN 7
-
-            "Latvia",
-
-            "Lebanon",
-
-            "Lesotho",
-
-            "Liberia",
-
-            "Libya",
-
-            "Liechtenstein",
-
-            "Lithuania",
-
-            "Luxembourg",
-
-            "Madagascar",
-
-            "Malawi",
-
-            "Malaysia",
-
-            "Maldives",
-
-            "Mali",
-
-            "Malta",
-
-            "Marshall Islands",
-
-
-            // COLUMN 8
-
-            "Mauritania",
-
-            "Mauritius",
-
-            "Mexico",
-
-            "Micronesia",
-
-            "Moldova",
-
-            "Monaco",
-
-            "Mongolia",
-
-            "Montenegro",
-
-            "Morocco",
-
-            "Mozambique",
-
-            "Myanmar",
-
-            "Namibia",
-
-            "Nauru",
-
-            "Nepal",
-
-            "Netherlands",
-
-
-            // COLUMN 9
-
-            "New Zealand",
-
-            "Nicaragua",
-
-            "Niger",
-
-            "Nigeria",
-
-            "North Korea",
-
-            "North Macedonia",
-
-            "Norway",
-
-            "Oman",
-
-            "Pakistan",
-
-            "Palau",
-
-            "Panama",
-
-            "Papua New Guinea",
-
-            "Paraguay",
-
-            "Peru",
-
-            "Philippines",
-
-
-            // COLUMN 10
-
-            "Poland",
-
-            "Portugal",
-
-            "Qatar",
-
-            "Romania",
-
-            "Russia",
-
-            "Rwanda",
-
-            "Saint Kitts and Nevis",
-
-            "Saint Lucia",
-
-            "Saint Vincent and the Grenadines",
-
-            "Samoa",
-
-            "San Marino",
-
-            "Sao Tome and Principe",
-
-            "Saudi Arabia",
-
-            "Senegal",
-
-            "Serbia",
-
-
-            // COLUMN 11
-
-            "Seychelles",
-
-            "Sierra Leone",
-
-            "Singapore",
-
-            "Slovakia",
-
-            "Slovenia",
-
-            "Solomon Islands",
-
-            "Somalia",
-
-            "South Africa",
-
-            "South Korea",
-
-            "South Sudan",
-
-            "Spain",
-
-            "Sri Lanka",
-
-            "Sudan",
-
-            "Suriname",
-
-            "Sweden",
-
-
-            // COLUMN 12
-
-            "Switzerland",
-
-            "Syria",
-
-            "Tajikistan",
-
-            "Tanzania",
-
-            "Thailand",
-
-            "Timor-Leste",
-
-            "Togo",
-
-            "Tonga",
-
-            "Trinidad and Tobago",
-
-            "Tunisia",
-
-            "Turkey",
-
-            "Turkmenistan",
-
-            "Tuvalu",
-
-            "Uganda",
-
-            "Ukraine"
-
-        ];
-
-
-        /*
-        =====================================================
-
-        SETTINGS
-
-        =====================================================
-        */
-
-
-        const countriesPerColumn = 15;
-
-        const visibleColumns = 4;
-
-
-        let currentColumn = 0;
-
-
-        const totalColumns =
-
-            Math.ceil(
-
-                countries.length /
-
-                countriesPerColumn
-
-            );
-
-
-        const countryList =
-
-            document.getElementById(
-
-                "countryList"
-
-            );
-
-
-        const leftButton =
-
-            document.getElementById(
-
-                "leftButton"
-
-            );
-
-
-        const rightButton =
-
-            document.getElementById(
-
-                "rightButton"
-
-            );
-
-
-        /*
-        =====================================================
-
-        DISPLAY COUNTRIES
-
-        =====================================================
-        */
-
-
-        function showCountries() {
-
-
-            countryList.innerHTML = "";
-
-
-            const startIndex =
-
-                currentColumn *
-
-                countriesPerColumn;
-
-
-            const endIndex =
-
-                startIndex +
-
-                (
-
-                    countriesPerColumn *
-
-                    visibleColumns
-
-                );
-
-
-            const visibleCountries =
-
-                countries.slice(
-
-                    startIndex,
-
-                    endIndex
-
-                );
-
-
-            visibleCountries.forEach(
-
-                country => {
-
-
-                    const button =
-
-                        document.createElement(
-
-                            "button"
-
-                        );
-
-
-                    button.className =
-
-                        "country-button";
-
-
-                    button.innerText =
-
-                        country;
-
-
-                    button.onclick =
-
-                        function() {
-
-                            copyCountry(
-
-                                button
-
-                            );
-
-                        };
-
-
-                    countryList.appendChild(
-
-                        button
-
-                    );
-
-
-                }
-
-            );
-
-
-            updateNavigationButtons();
-
+    <!-- COUNTRY GRID -->
+    <div id="countryList" class="country-list"></div>
+
+</div>
+
+<script>
+
+    /*
+    =====================================================
+    180 COUNTRIES
+    12 COLUMNS
+    15 COUNTRIES PER COLUMN
+    =====================================================
+    */
+
+    const countries = [
+        // COLUMN 1
+        "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda",
+        "Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas",
+        "Bahrain","Bangladesh","Barbados",
+        // COLUMN 2
+        "Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
+        "Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso",
+        "Burundi","Cabo Verde","Cambodia",
+        // COLUMN 3
+        "Cameroon","Canada","Central African Republic","Chad","Chile","China",
+        "Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba",
+        "Cyprus","Czechia","Denmark",
+        // COLUMN 4
+        "Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador",
+        "Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji",
+        "Finland","France","Gabon",
+        // COLUMN 5
+        "Gambia","Georgia","Germany","Ghana","Greece","Grenada",
+        "Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras",
+        "Hungary","Iceland","India",
+        // COLUMN 6
+        "Indonesia","Iran","Iraq","Ireland","Israel","Italy",
+        "Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati",
+        "Kuwait","Kyrgyzstan","Laos",
+        // COLUMN 7
+        "Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein",
+        "Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives",
+        "Mali","Malta","Marshall Islands",
+        // COLUMN 8
+        "Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco",
+        "Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia",
+        "Nauru","Nepal","Netherlands",
+        // COLUMN 9
+        "New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia",
+        "Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea",
+        "Paraguay","Peru","Philippines",
+        // COLUMN 10
+        "Poland","Portugal","Qatar","Romania","Russia","Rwanda",
+        "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe",
+        "Saudi Arabia","Senegal","Serbia",
+        // COLUMN 11
+        "Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands",
+        "Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka",
+        "Sudan","Suriname","Sweden",
+        // COLUMN 12
+        "Switzerland","Syria","Tajikistan","Tanzania","Thailand","Timor-Leste",
+        "Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan",
+        "Tuvalu","Uganda","Ukraine"
+    ];
+
+    /*
+    =====================================================
+    SETTINGS
+    =====================================================
+    */
+
+    const countriesPerColumn = 15;
+    const visibleColumns = 4;
+    let currentColumn = 0;
+    const totalColumns = Math.ceil(countries.length / countriesPerColumn);
+
+    const countryList = document.getElementById("countryList");
+    const leftButton = document.getElementById("leftButton");
+    const rightButton = document.getElementById("rightButton");
+
+    /*
+    =====================================================
+    TIME SETTINGS
+    =====================================================
+    */
+
+    const ONE_HOUR = 60 * 60 * 1000;
+    const TWENTY_FOUR_HOURS = 24 * ONE_HOUR;
+    const FORTY_EIGHT_HOURS = 48 * ONE_HOUR;
+    const SEVENTY_TWO_HOURS = 72 * ONE_HOUR;
+    const NINETY_SIX_HOURS = 96 * ONE_HOUR;
+
+    /*
+    =====================================================
+    LOCAL STORAGE
+    =====================================================
+    */
+
+    const STORAGE_KEY = "countryCopyLastClicked";
+
+    function getClickedTimes() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (!savedData) return {};
+        try {
+            return JSON.parse(savedData);
+        } catch (error) {
+            console.error("Error reading saved data:", error);
+            return {};
+        }
+    }
+
+    function saveClickedTimes(clickedTimes) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(clickedTimes));
+    }
+
+    /*
+    =====================================================
+    GET COUNTRY STATUS
+    (STILL USED FOR COLOUR ONLY - NOT FOR LOCKING)
+    =====================================================
+    */
+
+    function getCountryStatus(country, clickedTimes) {
+
+        if (!clickedTimes[country]) return "normal";
+
+        const clickedTime = clickedTimes[country];
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - clickedTime;
+
+        if (elapsedTime >= NINETY_SIX_HOURS) return "normal";
+        if (elapsedTime < TWENTY_FOUR_HOURS) return "red";
+        if (elapsedTime < FORTY_EIGHT_HOURS) return "orange";
+        if (elapsedTime < SEVENTY_TWO_HOURS) return "yellow";
+        return "light-yellow";
+    }
+
+    /*
+    =====================================================
+    DISPLAY COUNTRIES
+    =====================================================
+    */
+
+    function showCountries() {
+
+        countryList.innerHTML = "";
+
+        const startIndex = currentColumn * countriesPerColumn;
+        const endIndex = startIndex + (countriesPerColumn * visibleColumns);
+        const visibleCountries = countries.slice(startIndex, endIndex);
+
+        const clickedTimes = getClickedTimes();
+
+        visibleCountries.forEach(country => {
+
+            const button = document.createElement("button");
+            button.className = "country-button";
+            button.innerText = country;
+
+            const status = getCountryStatus(country, clickedTimes);
+
+            /* COLOUR ONLY - BUTTON STAYS ENABLED */
+            applyCountryStatus(button, status);
+
+            button.onclick = function() {
+                copyCountry(button, country);
+            };
+
+            countryList.appendChild(button);
+        });
+
+        updateNavigationButtons();
+    }
+
+    /*
+    =====================================================
+    APPLY COUNTRY STATUS
+    (COLOUR ONLY - NEVER DISABLES THE BUTTON)
+    =====================================================
+    */
+
+    function applyCountryStatus(button, status) {
+
+        button.classList.remove(
+            "status-red",
+            "status-orange",
+            "status-yellow",
+            "status-light-yellow"
+        );
+
+        if (status === "red") {
+            button.classList.add("status-red");
+        } else if (status === "orange") {
+            button.classList.add("status-orange");
+        } else if (status === "yellow") {
+            button.classList.add("status-yellow");
+        } else if (status === "light-yellow") {
+            button.classList.add("status-light-yellow");
         }
 
+        /* ALWAYS CLICKABLE */
+        button.disabled = false;
+    }
 
-        /*
-        =====================================================
+    /*
+    =====================================================
+    MOVE LEFT
+    =====================================================
+    */
 
-        MOVE LEFT
-
-        =====================================================
-        */
-
-
-        function moveLeft() {
-
-
-            if (
-
-                currentColumn > 0
-
-            ) {
-
-
-                currentColumn--;
-
-
-                showCountries();
-
-            }
-
+    function moveLeft() {
+        if (currentColumn > 0) {
+            currentColumn--;
+            showCountries();
         }
+    }
 
+    /*
+    =====================================================
+    MOVE RIGHT
+    =====================================================
+    */
 
-        /*
-        =====================================================
-
-        MOVE RIGHT
-
-        =====================================================
-        */
-
-
-        function moveRight() {
-
-
-            if (
-
-                currentColumn <
-
-                totalColumns -
-
-                visibleColumns
-
-            ) {
-
-
-                currentColumn++;
-
-
-                showCountries();
-
-            }
-
+    function moveRight() {
+        if (currentColumn < totalColumns - visibleColumns) {
+            currentColumn++;
+            showCountries();
         }
+    }
 
+    /*
+    =====================================================
+    UPDATE NAVIGATION BUTTONS
+    =====================================================
+    */
 
-        /*
-        =====================================================
+    function updateNavigationButtons() {
+        leftButton.disabled = currentColumn === 0;
+        rightButton.disabled = currentColumn >= totalColumns - visibleColumns;
+    }
 
-        UPDATE NAVIGATION BUTTONS
+    /*
+    =====================================================
+    COPY COUNTRY
+    (NO LONGER BLOCKED BY DISABLED STATE - ALWAYS COPIES)
+    =====================================================
+    */
 
-        =====================================================
-        */
+    function copyCountry(button, country) {
 
+        const clickedTimes = getClickedTimes();
+        clickedTimes[country] = Date.now();
+        saveClickedTimes(clickedTimes);
 
-        function updateNavigationButtons() {
+        navigator.clipboard.writeText(country);
 
+        button.innerText = "Copied!";
+        button.classList.remove(
+            "status-orange",
+            "status-yellow",
+            "status-light-yellow"
+        );
+        button.classList.add("status-red");
 
-            leftButton.disabled =
+        setTimeout(function() {
+            button.innerText = country;
+        }, 1000);
+    }
 
-                currentColumn === 0;
+    /*
+    =====================================================
+    AUTOMATICALLY UPDATE COLOURS
+    =====================================================
+    */
 
+    function updateAllCountryStatuses() {
 
-            rightButton.disabled =
+        const clickedTimes = getClickedTimes();
+        const buttons = document.querySelectorAll(".country-button");
 
-                currentColumn >=
+        buttons.forEach(button => {
 
-                totalColumns -
+            const country = button.innerText.trim();
+            if (country === "Copied!") return;
 
-                visibleColumns;
+            const status = getCountryStatus(country, clickedTimes);
+            applyCountryStatus(button, status);
+        });
+    }
 
-        }
+    /*
+    =====================================================
+    START
+    =====================================================
+    */
 
+    showCountries();
 
-        /*
-        =====================================================
+    setInterval(updateAllCountryStatuses, 60 * 1000);
 
-        COPY COUNTRY
-
-        =====================================================
-        */
-
-
-        function copyCountry(button) {
-
-
-            const country =
-
-                button.innerText.trim();
-
-
-            navigator.clipboard.writeText(
-
-                country
-
-            );
-
-
-            const originalText =
-
-                button.innerText;
-
-
-            button.innerText =
-
-                "Copied!";
-
-
-            button.classList.add(
-
-                "copied"
-
-            );
-
-
-            setTimeout(
-
-                function() {
-
-
-                    button.innerText =
-
-                        originalText;
-
-
-                    button.classList.remove(
-
-                        "copied"
-
-                    );
-
-
-                },
-
-                1000
-
-            );
-
-        }
-
-
-        /*
-        =====================================================
-
-        START
-
-        =====================================================
-        */
-
-
-        showCountries();
-
-
-    </script>
-
-
+</script>
 </body>
-
 </html>
