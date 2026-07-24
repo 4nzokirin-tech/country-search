@@ -39,15 +39,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 20px;
+        gap: 10px;
         overflow: hidden;
     }
 
     h1 {
         margin: 0;
-        font-size: 24px;
+        font-size: 20px;
         text-align: center;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* NAVIGATION BUTTONS */
@@ -72,6 +74,27 @@
         color: #555;
         cursor: not-allowed;
         box-shadow: none;
+    }
+
+    /* CLEAR DATA BUTTON */
+    .clear-button {
+        height: 38px;
+        flex-shrink: 0;
+        border: none;
+        border-radius: 8px;
+        background: #ff6b6b;
+        color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        font-size: 13px;
+        font-weight: bold;
+        padding: 0 12px;
+        cursor: pointer;
+        transition: 0.15s;
+        white-space: nowrap;
+    }
+
+    .clear-button:active {
+        transform: scale(0.92);
     }
 
     /* COUNTRY GRID */
@@ -150,6 +173,7 @@
         <button id="leftButton" class="navigation-button" onclick="moveLeft()">←</button>
         <h1>Country Copy</h1>
         <button id="rightButton" class="navigation-button" onclick="moveRight()">→</button>
+        <button id="clearButton" class="clear-button" onclick="clearData()">Clear Data</button>
     </div>
 
     <!-- COUNTRY GRID -->
@@ -420,6 +444,34 @@
         setTimeout(function() {
             button.innerText = country;
         }, 1000);
+    }
+
+    /*
+    =====================================================
+    CLEAR DATA
+    WIPES ALL SAVED CLICK TIMES
+    RESETS EVERY COUNTRY BACK TO NORMAL
+    =====================================================
+    */
+
+    function clearData() {
+
+        const confirmed = window.confirm(
+
+            "Clear all saved data? This will reset every country's colour back to normal."
+
+        );
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+        localStorage.removeItem(STORAGE_KEY);
+
+        showCountries();
+
     }
 
     /*
