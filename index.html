@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Country Copy</title>
+<title>Word Generator</title>
 <style>
     * { box-sizing: border-box; }
 
@@ -33,19 +33,33 @@
         overflow: hidden;
     }
 
-    /* HEADER */
+    /* HEADER (TWO ROWS: TITLE+GENERATE, THEN NAV+CLEAR) */
     .header {
-        flex: 0 0 50px;
+        flex: 0 0 96px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        overflow: hidden;
+    }
+
+    .header-top {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 10px;
-        overflow: hidden;
+    }
+
+    .header-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
 
     h1 {
         margin: 0;
-        font-size: 20px;
+        font-size: 18px;
         text-align: center;
         white-space: nowrap;
         overflow: hidden;
@@ -76,6 +90,32 @@
         box-shadow: none;
     }
 
+    /* GENERATE BUTTON */
+    .generate-button {
+        height: 40px;
+        flex-shrink: 0;
+        border: none;
+        border-radius: 8px;
+        background: #51cf66;
+        color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        font-size: 15px;
+        font-weight: bold;
+        padding: 0 20px;
+        cursor: pointer;
+        transition: 0.15s;
+        white-space: nowrap;
+    }
+
+    .generate-button:active { transform: scale(0.92); }
+
+    .generate-button:disabled {
+        background: #999;
+        color: #555;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
     /* CLEAR DATA BUTTON */
     .clear-button {
         height: 38px;
@@ -97,7 +137,28 @@
         transform: scale(0.92);
     }
 
-    /* COUNTRY GRID */
+    /* CLEAR WORDS BUTTON */
+    .clear-words-button {
+        height: 38px;
+        flex-shrink: 0;
+        border: none;
+        border-radius: 8px;
+        background: #495057;
+        color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        font-size: 13px;
+        font-weight: bold;
+        padding: 0 12px;
+        cursor: pointer;
+        transition: 0.15s;
+        white-space: nowrap;
+    }
+
+    .clear-words-button:active {
+        transform: scale(0.92);
+    }
+
+    /* WORD GRID */
     .country-list {
         flex: 1;
         min-height: 0;
@@ -110,7 +171,7 @@
         overflow: hidden;
     }
 
-    /* COUNTRY BUTTON */
+    /* BUBBLE BUTTON */
     .country-button {
         width: 100%;
         height: 100%;
@@ -131,6 +192,14 @@
     }
 
     .country-button:active { transform: scale(0.95); }
+
+    /* EMPTY BUBBLE - NOT YET GENERATED */
+    .country-button.empty {
+        background: rgba(255, 255, 255, 0.4);
+        box-shadow: none;
+        border: 1px dashed rgba(0, 0, 0, 0.15);
+        cursor: default;
+    }
 
     /*
     =====================================================
@@ -170,13 +239,19 @@
 
     <!-- HEADER -->
     <div class="header">
-        <button id="leftButton" class="navigation-button" onclick="moveLeft()">←</button>
-        <h1>Country Copy</h1>
-        <button id="rightButton" class="navigation-button" onclick="moveRight()">→</button>
-        <button id="clearButton" class="clear-button" onclick="clearData()">Clear Data</button>
+        <div class="header-top">
+            <h1>Word Generator</h1>
+            <button id="generateButton" class="generate-button" onclick="generateWord()">Generate</button>
+        </div>
+        <div class="header-bottom">
+            <button id="leftButton" class="navigation-button" onclick="moveLeft()">←</button>
+            <button id="rightButton" class="navigation-button" onclick="moveRight()">→</button>
+            <button id="clearButton" class="clear-button" onclick="clearData()">Clear Colours</button>
+            <button id="clearWordsButton" class="clear-words-button" onclick="clearWords()">Clear Words</button>
+        </div>
     </div>
 
-    <!-- COUNTRY GRID -->
+    <!-- WORD GRID -->
     <div id="countryList" class="country-list"></div>
 
 </div>
@@ -185,76 +260,63 @@
 
     /*
     =====================================================
-    180 COUNTRIES
-    12 COLUMNS
-    15 COUNTRIES PER COLUMN
+    NONSENSE WORD GENERATOR
+    (No fixed pool - words are built fresh each time from
+    random syllables. Duplicate checking happens against
+    whatever is already sitting in the bubbles.)
     =====================================================
     */
 
-    const countries = [
-        // COLUMN 1
-        "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda",
-        "Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas",
-        "Bahrain","Bangladesh","Barbados",
-        // COLUMN 2
-        "Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
-        "Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso",
-        "Burundi","Cabo Verde","Cambodia",
-        // COLUMN 3
-        "Cameroon","Canada","Central African Republic","Chad","Chile","China",
-        "Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba",
-        "Cyprus","Czechia","Denmark",
-        // COLUMN 4
-        "Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador",
-        "Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji",
-        "Finland","France","Gabon",
-        // COLUMN 5
-        "Gambia","Georgia","Germany","Ghana","Greece","Grenada",
-        "Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras",
-        "Hungary","Iceland","India",
-        // COLUMN 6
-        "Indonesia","Iran","Iraq","Ireland","Israel","Italy",
-        "Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati",
-        "Kuwait","Kyrgyzstan","Laos",
-        // COLUMN 7
-        "Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein",
-        "Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives",
-        "Mali","Malta","Marshall Islands",
-        // COLUMN 8
-        "Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco",
-        "Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia",
-        "Nauru","Nepal","Netherlands",
-        // COLUMN 9
-        "New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia",
-        "Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea",
-        "Paraguay","Peru","Philippines",
-        // COLUMN 10
-        "Poland","Portugal","Qatar","Romania","Russia","Rwanda",
-        "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe",
-        "Saudi Arabia","Senegal","Serbia",
-        // COLUMN 11
-        "Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands",
-        "Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka",
-        "Sudan","Suriname","Sweden",
-        // COLUMN 12
-        "Switzerland","Syria","Tajikistan","Tanzania","Thailand","Timor-Leste",
-        "Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan",
-        "Tuvalu","Uganda","Ukraine"
+    const onsets = [
+        "b","c","d","f","g","h","j","k","l","m","n","p","r","s","t","v","w","y","z",
+        "bl","br","ch","cl","cr","dr","fl","fr","gl","gr","pl","pr",
+        "sc","sh","sk","sl","sm","sn","sp","st","str","sw","th","tr","tw","wh"
     ];
+
+    const vowels = ["a","e","i","o","u","ai","ea","ee","oo","ou","ie","oa"];
+
+    const codas = [
+        "","","", // weighted toward open syllables
+        "b","d","g","k","l","m","n","p","r","s","t","v","z",
+        "ng","sh","th","ch","st","nd","nt","rk","lk","rp"
+    ];
+
+    function randomFrom(list) {
+        return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function makeSyllable() {
+        return randomFrom(onsets) + randomFrom(vowels) + randomFrom(codas);
+    }
+
+    function generateNonsenseWord() {
+        const syllableCount = 1 + Math.floor(Math.random() * 3); // 1 to 3 syllables
+        let word = "";
+        for (let i = 0; i < syllableCount; i++) {
+            word += makeSyllable();
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
 
     /*
     =====================================================
     SETTINGS
+    8 COLUMNS MAX, 15 SLOTS PER COLUMN, 4 COLUMNS VISIBLE
     =====================================================
     */
 
-    const countriesPerColumn = 15;
+    const slotsPerColumn = 15;
     const visibleColumns = 4;
-    const totalColumns = Math.ceil(countries.length / countriesPerColumn);
+    const totalColumns = 8;
+    const capacity = totalColumns * slotsPerColumn; // 120 slots total
+    const maxColumnOffset = totalColumns - visibleColumns;
+
+    let currentColumn = 0;
 
     const countryList = document.getElementById("countryList");
     const leftButton = document.getElementById("leftButton");
     const rightButton = document.getElementById("rightButton");
+    const generateButton = document.getElementById("generateButton");
 
     /*
     =====================================================
@@ -270,12 +332,13 @@
 
     /*
     =====================================================
-    LOCAL STORAGE
+    LOCAL STORAGE KEYS
     =====================================================
     */
 
-    const STORAGE_KEY = "countryCopyLastClicked";
-    const POSITION_KEY = "countryCopyLastColumn";
+    const STORAGE_KEY = "wordGenClickedTimes";
+    const WORDS_KEY = "wordGenGeneratedWords";
+    const POSITION_KEY = "wordGenLastColumn";
 
     function getClickedTimes() {
         const savedData = localStorage.getItem(STORAGE_KEY);
@@ -283,7 +346,7 @@
         try {
             return JSON.parse(savedData);
         } catch (error) {
-            console.error("Error reading saved data:", error);
+            console.error("Error reading saved click data:", error);
             return {};
         }
     }
@@ -291,6 +354,37 @@
     function saveClickedTimes(clickedTimes) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(clickedTimes));
     }
+
+    /*
+    =====================================================
+    GENERATED WORDS (ONE SLOT PER BUBBLE, NULL = EMPTY)
+    =====================================================
+    */
+
+    function getGeneratedWords() {
+        const saved = localStorage.getItem(WORDS_KEY);
+        if (!saved) return new Array(capacity).fill(null);
+        try {
+            const parsed = JSON.parse(saved);
+            if (!Array.isArray(parsed)) return new Array(capacity).fill(null);
+
+            // Resize gracefully if capacity ever changes
+            const resized = new Array(capacity).fill(null);
+            for (let i = 0; i < Math.min(parsed.length, capacity); i++) {
+                resized[i] = parsed[i];
+            }
+            return resized;
+        } catch (error) {
+            console.error("Error reading saved words:", error);
+            return new Array(capacity).fill(null);
+        }
+    }
+
+    function saveGeneratedWords(words) {
+        localStorage.setItem(WORDS_KEY, JSON.stringify(words));
+    }
+
+    let generatedWords = getGeneratedWords();
 
     /*
     =====================================================
@@ -305,11 +399,8 @@
         const parsed = parseInt(saved, 10);
         if (isNaN(parsed)) return 0;
 
-        const maxColumn = Math.max(0, totalColumns - visibleColumns);
-
-        // Clamp in case the country list ever changes size
         if (parsed < 0) return 0;
-        if (parsed > maxColumn) return maxColumn;
+        if (parsed > maxColumnOffset) return maxColumnOffset;
         return parsed;
     }
 
@@ -317,20 +408,19 @@
         localStorage.setItem(POSITION_KEY, String(column));
     }
 
-    let currentColumn = getSavedColumn();
+    currentColumn = getSavedColumn();
 
     /*
     =====================================================
-    GET COUNTRY STATUS
-    (STILL USED FOR COLOUR ONLY - NOT FOR LOCKING)
+    GET WORD STATUS (COLOUR ONLY)
     =====================================================
     */
 
-    function getCountryStatus(country, clickedTimes) {
+    function getWordStatus(word, clickedTimes) {
 
-        if (!clickedTimes[country]) return "normal";
+        if (!word || !clickedTimes[word]) return "normal";
 
-        const clickedTime = clickedTimes[country];
+        const clickedTime = clickedTimes[word];
         const currentTime = Date.now();
         const elapsedTime = currentTime - clickedTime;
 
@@ -343,49 +433,55 @@
 
     /*
     =====================================================
-    DISPLAY COUNTRIES
+    DISPLAY WORD BUBBLES (FILLED + EMPTY)
     =====================================================
     */
 
-    function showCountries() {
+    function showWords() {
 
         countryList.innerHTML = "";
 
-        const startIndex = currentColumn * countriesPerColumn;
-        const endIndex = startIndex + (countriesPerColumn * visibleColumns);
-        const visibleCountries = countries.slice(startIndex, endIndex);
+        const startIndex = currentColumn * slotsPerColumn;
+        const endIndex = startIndex + (slotsPerColumn * visibleColumns);
+        const visibleSlots = generatedWords.slice(startIndex, endIndex);
 
         const clickedTimes = getClickedTimes();
 
-        visibleCountries.forEach(country => {
+        visibleSlots.forEach(word => {
 
             const button = document.createElement("button");
             button.className = "country-button";
-            button.innerText = country;
 
-            const status = getCountryStatus(country, clickedTimes);
+            if (word) {
+                button.innerText = word;
+                button.dataset.word = word;
 
-            /* COLOUR ONLY - BUTTON STAYS ENABLED */
-            applyCountryStatus(button, status);
+                const status = getWordStatus(word, clickedTimes);
+                applyWordStatus(button, status);
 
-            button.onclick = function() {
-                copyCountry(button, country);
-            };
+                button.onclick = function() {
+                    copyWord(button, word);
+                };
+            } else {
+                button.innerText = "";
+                button.classList.add("empty");
+                button.disabled = true;
+            }
 
             countryList.appendChild(button);
         });
 
         updateNavigationButtons();
+        updateGenerateButton();
     }
 
     /*
     =====================================================
-    APPLY COUNTRY STATUS
-    (COLOUR ONLY - NEVER DISABLES THE BUTTON)
+    APPLY WORD STATUS (COLOUR ONLY - NEVER DISABLES A FILLED BUBBLE)
     =====================================================
     */
 
-    function applyCountryStatus(button, status) {
+    function applyWordStatus(button, status) {
 
         button.classList.remove(
             "status-red",
@@ -404,13 +500,53 @@
             button.classList.add("status-light-yellow");
         }
 
-        /* ALWAYS CLICKABLE */
         button.disabled = false;
     }
 
     /*
     =====================================================
-    MOVE LEFT
+    GENERATE WORD
+    - New word always lands in the first bubble.
+    - Everything else shifts down one slot (down the column,
+      then into the next column), and whatever falls off the
+      end of the 120th slot is dropped.
+    - Never repeats a word already sitting in a bubble.
+    =====================================================
+    */
+
+    function generateWord() {
+
+        const usedWords = new Set(generatedWords.filter(w => w !== null));
+
+        let newWord;
+        let attempts = 0;
+        do {
+            newWord = generateNonsenseWord();
+            attempts++;
+        } while (usedWords.has(newWord) && attempts < 50);
+
+        if (usedWords.has(newWord)) {
+            window.alert("Couldn't come up with a unique word - try again.");
+            return;
+        }
+
+        // New word always goes in the very first bubble.
+        // Everything else shifts down one slot; whatever falls
+        // off the end (120th slot) is dropped.
+        generatedWords.unshift(newWord);
+        generatedWords.pop();
+        saveGeneratedWords(generatedWords);
+
+        // Jump the view back to the first page so the new word is visible
+        currentColumn = 0;
+        saveColumn(currentColumn);
+
+        showWords();
+    }
+
+    /*
+    =====================================================
+    MOVE LEFT / RIGHT
     =====================================================
     */
 
@@ -418,49 +554,48 @@
         if (currentColumn > 0) {
             currentColumn--;
             saveColumn(currentColumn);
-            showCountries();
+            showWords();
         }
     }
-
-    /*
-    =====================================================
-    MOVE RIGHT
-    =====================================================
-    */
 
     function moveRight() {
-        if (currentColumn < totalColumns - visibleColumns) {
+        if (currentColumn < maxColumnOffset) {
             currentColumn++;
             saveColumn(currentColumn);
-            showCountries();
+            showWords();
         }
     }
 
     /*
     =====================================================
-    UPDATE NAVIGATION BUTTONS
+    UPDATE NAVIGATION / GENERATE BUTTON STATE
     =====================================================
     */
 
     function updateNavigationButtons() {
         leftButton.disabled = currentColumn === 0;
-        rightButton.disabled = currentColumn >= totalColumns - visibleColumns;
+        rightButton.disabled = currentColumn >= maxColumnOffset;
+    }
+
+    function updateGenerateButton() {
+        // Always enabled - new words always shift into the first
+        // bubble, so there's no "full" state to block on.
+        generateButton.disabled = false;
     }
 
     /*
     =====================================================
-    COPY COUNTRY
-    (NO LONGER BLOCKED BY DISABLED STATE - ALWAYS COPIES)
+    COPY WORD
     =====================================================
     */
 
-    function copyCountry(button, country) {
+    function copyWord(button, word) {
 
         const clickedTimes = getClickedTimes();
-        clickedTimes[country] = Date.now();
+        clickedTimes[word] = Date.now();
         saveClickedTimes(clickedTimes);
 
-        navigator.clipboard.writeText(country);
+        navigator.clipboard.writeText(word);
 
         button.innerText = "Copied!";
         button.classList.remove(
@@ -471,38 +606,53 @@
         button.classList.add("status-red");
 
         setTimeout(function() {
-            button.innerText = country;
+            button.innerText = word;
         }, 1000);
     }
 
     /*
     =====================================================
     CLEAR DATA
-    WIPES ALL SAVED CLICK TIMES
-    RESETS EVERY COUNTRY BACK TO NORMAL
+    RESETS COLOUR GRADING ONLY - WORDS STAY IN PLACE
     =====================================================
     */
 
     function clearData() {
 
         const confirmed = window.confirm(
-
-            "Clear all saved data? This will reset every country's colour back to normal and return to the first page."
-
+            "Clear colour data? This will reset every bubble's colour back to normal (words stay put)."
         );
 
         if (!confirmed) {
-
             return;
-
         }
 
         localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem(POSITION_KEY);
-        currentColumn = 0;
 
-        showCountries();
+        showWords();
+    }
 
+    /*
+    =====================================================
+    CLEAR WORDS
+    EMPTIES ALL 120 BUBBLES (WORDS ONLY - COLOURS UNTOUCHED)
+    =====================================================
+    */
+
+    function clearWords() {
+
+        const confirmed = window.confirm(
+            "Clear all generated words? This will empty every bubble."
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        localStorage.removeItem(WORDS_KEY);
+        generatedWords = new Array(capacity).fill(null);
+
+        showWords();
     }
 
     /*
@@ -511,18 +661,17 @@
     =====================================================
     */
 
-    function updateAllCountryStatuses() {
+    function updateAllWordStatuses() {
 
         const clickedTimes = getClickedTimes();
-        const buttons = document.querySelectorAll(".country-button");
+        const buttons = document.querySelectorAll(".country-button:not(.empty)");
 
         buttons.forEach(button => {
+            const word = button.dataset.word;
+            if (!word || button.innerText === "Copied!") return;
 
-            const country = button.innerText.trim();
-            if (country === "Copied!") return;
-
-            const status = getCountryStatus(country, clickedTimes);
-            applyCountryStatus(button, status);
+            const status = getWordStatus(word, clickedTimes);
+            applyWordStatus(button, status);
         });
     }
 
@@ -532,9 +681,9 @@
     =====================================================
     */
 
-    showCountries();
+    showWords();
 
-    setInterval(updateAllCountryStatuses, 60 * 1000);
+    setInterval(updateAllWordStatuses, 60 * 1000);
 
 </script>
 </body>
