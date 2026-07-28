@@ -260,42 +260,80 @@
 
     /*
     =====================================================
-    NONSENSE WORD GENERATOR
-    (No fixed pool - words are built fresh each time from
-    random syllables. Duplicate checking happens against
-    whatever is already sitting in the bubbles.)
+    ENGLISH WORD DICTIONARY
+    A built-in list of real English words the generator
+    picks from at random. Duplicate checking happens
+    against whatever is already sitting in the bubbles.
     =====================================================
     */
 
-    const onsets = [
-        "b","c","d","f","g","h","j","k","l","m","n","p","r","s","t","v","w","y","z",
-        "bl","br","ch","cl","cr","dr","fl","fr","gl","gr","pl","pr",
-        "sc","sh","sk","sl","sm","sn","sp","st","str","sw","th","tr","tw","wh"
-    ];
-
-    const vowels = ["a","e","i","o","u","ai","ea","ee","oo","ou","ie","oa"];
-
-    const codas = [
-        "","","", // weighted toward open syllables
-        "b","d","g","k","l","m","n","p","r","s","t","v","z",
-        "ng","sh","th","ch","st","nd","nt","rk","lk","rp"
+    const englishWords = [
+        "Apple","Banana","Orange","Grape","Lemon","Peach","Mango","Cherry","Melon","Berry",
+        "River","Mountain","Ocean","Forest","Desert","Island","Valley","Meadow","Canyon","Glacier",
+        "Sunset","Sunrise","Cloud","Storm","Breeze","Thunder","Rainbow","Shadow","Horizon","Twilight",
+        "Tiger","Eagle","Dolphin","Panther","Falcon","Otter","Wolf","Fox","Rabbit","Owl",
+        "Guitar","Piano","Violin","Drum","Trumpet","Flute","Harp","Cello","Banjo","Clarinet",
+        "Castle","Bridge","Tower","Garden","Harbor","Village","Cottage","Palace","Fountain","Lighthouse",
+        "Whisper","Echo","Flame","Spark","Frost","Mist","Dew","Ember","Blaze","Ripple",
+        "Journey","Voyage","Quest","Adventure","Expedition","Pilgrimage","Odyssey","Excursion","Trek","Wander",
+        "Wisdom","Courage","Honor","Justice","Freedom","Harmony","Serenity","Triumph","Destiny","Legacy",
+        "Crystal","Diamond","Emerald","Sapphire","Amber","Pearl","Opal","Jade","Ruby","Topaz",
+        "Comet","Meteor","Nebula","Galaxy","Cosmos","Orbit","Eclipse","Aurora","Zenith","Satellite",
+        "Whistle","Melody","Rhythm","Chorus","Ballad","Serenade","Anthem","Sonata","Symphony","Lullaby",
+        "Brave","Gentle","Swift","Quiet","Bright","Bold","Calm","Clever","Fierce","Graceful",
+        "Golden","Silver","Crimson","Azure","Ivory","Scarlet","Violet","Copper","Bronze","Turquoise",
+        "Dream","Hope","Wonder","Magic","Mystery","Fantasy","Legend","Myth","Fable","Story",
+        "Ancient","Modern","Timeless","Eternal","Infinite","Endless","Boundless","Vast","Immense","Grand",
+        "Whale","Shark","Turtle","Seal","Penguin","Walrus","Octopus","Starfish","Coral","Anchor",
+        "Lantern","Candle","Torch","Beacon","Glow","Shine","Gleam","Flicker","Radiance","Luster",
+        "Path","Trail","Road","Route","Passage","Crossing","Junction","Gateway","Threshold","Corridor",
+        "Feather","Petal","Blossom","Bloom","Leaf","Branch","Root","Seed","Sprout","Vine",
+        "Whisker","Paw","Claw","Wing","Fin","Tail","Mane","Horn","Antler","Hoof",
+        "Puzzle","Riddle","Enigma","Secret","Clue","Cipher","Code","Key","Lock","Vault",
+        "Marble","Granite","Quartz","Slate","Clay","Sand","Stone","Pebble","Boulder","Cliff",
+        "Autumn","Winter","Spring","Summer","Harvest","Bloom","Thaw","Solstice","Equinox","Season",
+        "Sparrow","Robin","Heron","Crane","Swan","Peacock","Raven","Dove","Finch","Sparrowhawk",
+        "Charm","Grace","Elegance","Beauty","Splendor","Glory","Majesty","Brilliance","Wonder","Poise",
+        "Compass","Map","Sail","Mast","Deck","Hull","Rudder","Helm","Anchorage","Voyager",
+        "Prairie","Savanna","Tundra","Marsh","Swamp","Lagoon","Reef","Cove","Bay","Delta",
+        "Quiver","Shield","Sword","Armor","Helmet","Banner","Crest","Emblem","Insignia","Blade",
+        "Phoenix","Griffin","Dragon","Unicorn","Pegasus","Centaur","Mermaid","Sphinx","Titan","Oracle",
+        "Chime","Bell","Gong","Drumbeat","Cadence","Tempo","Pulse","Beat","Groove","Harmony",
+        "Shimmer","Glimmer","Flash","Sparkle","Twinkle","Glow","Radiant","Luminous","Vivid","Dazzle",
+        "Migration","Pilgrimage","Wandering","Roaming","Exploring","Venturing","Discovery","Frontier","Horizon","Journeyman",
+        "Silence","Stillness","Calm","Peace","Quietude","Tranquility","Serenity","Repose","Rest","Solitude",
+        "Lightning","Tempest","Cyclone","Hurricane","Tornado","Blizzard","Monsoon","Gale","Squall","Downpour",
+        "Velvet","Silk","Satin","Linen","Wool","Cotton","Cashmere","Suede","Leather","Denim",
+        "Whistle","Trumpet","Anthem","Fanfare","Overture","Prelude","Refrain","Verse","Chorus","Interlude",
+        "Meadowlark","Kingfisher","Hummingbird","Woodpecker","Nightingale","Cardinal","Mockingbird","Bluebird","Blackbird","Starling",
+        "Cinnamon","Vanilla","Nutmeg","Saffron","Ginger","Clove","Basil","Mint","Sage","Thyme",
+        "Marble","Ivory","Alabaster","Obsidian","Amethyst","Citrine","Garnet","Onyx","Moonstone","Peridot",
+        "Willow","Maple","Cedar","Birch","Oak","Pine","Elm","Aspen","Redwood","Sycamore"
     ];
 
     function randomFrom(list) {
         return list[Math.floor(Math.random() * list.length)];
     }
 
-    function makeSyllable() {
-        return randomFrom(onsets) + randomFrom(vowels) + randomFrom(codas);
-    }
+    /*
+    =====================================================
+    CONTENT FILTER
+    Screens out generated words that happen to contain a
+    common vulgar/adult substring, so nothing embarrassing
+    or filter-triggering slips through by chance.
+    =====================================================
+    */
 
-    function generateNonsenseWord() {
-        const syllableCount = 1 + Math.floor(Math.random() * 3); // 1 to 3 syllables
-        let word = "";
-        for (let i = 0; i < syllableCount; i++) {
-            word += makeSyllable();
-        }
-        return word.charAt(0).toUpperCase() + word.slice(1);
+    const bannedSubstrings = [
+        "sex","porn","fuck","fuk","fck","shit","cunt","cock","dick","penis",
+        "vagina","boob","tit","nude","naked","rape","slut","whore","bitch",
+        "biatch","hoe","xxx","anal","orgasm","cum","jizz","clit","smut",
+        "erotic","fetish","incest","milf","nsfw"
+    ];
+
+    function containsBannedSubstring(word) {
+        const lower = word.toLowerCase();
+        return bannedSubstrings.some(sub => lower.includes(sub));
     }
 
     /*
@@ -521,12 +559,15 @@
         let newWord;
         let attempts = 0;
         do {
-            newWord = generateNonsenseWord();
+            newWord = randomFrom(englishWords);
             attempts++;
-        } while (usedWords.has(newWord) && attempts < 50);
+        } while (
+            (usedWords.has(newWord) || containsBannedSubstring(newWord)) &&
+            attempts < 50
+        );
 
-        if (usedWords.has(newWord)) {
-            window.alert("Couldn't come up with a unique word - try again.");
+        if (usedWords.has(newWord) || containsBannedSubstring(newWord)) {
+            window.alert("Couldn't come up with a suitable word - try again.");
             return;
         }
 
