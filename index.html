@@ -589,13 +589,39 @@
     =====================================================
     */
 
+    function copyTextFallback(text) {
+        try {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.top = "0";
+            textarea.style.left = "0";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            const success = document.execCommand("copy");
+            document.body.removeChild(textarea);
+            return success;
+        } catch (error) {
+            console.error("Fallback copy failed:", error);
+            return false;
+        }
+    }
+
     function copyWord(button, word) {
 
         const clickedTimes = getClickedTimes();
         clickedTimes[word] = Date.now();
         saveClickedTimes(clickedTimes);
 
-        navigator.clipboard.writeText(word);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(word).catch(() => {
+                copyTextFallback(word);
+            });
+        } else {
+            copyTextFallback(word);
+        }
 
         button.innerText = "Copied!";
         button.classList.remove(
