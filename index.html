@@ -189,6 +189,17 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         transition: 0.15s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.15;
+    }
+
+    .country-button .word-flag {
+        font-size: 11px;
+        opacity: 0.7;
+        font-weight: normal;
     }
 
     .country-button:active { transform: scale(0.95); }
@@ -260,56 +271,158 @@
 
     /*
     =====================================================
-    ENGLISH WORD DICTIONARY
-    A built-in list of real English words the generator
-    picks from at random. Duplicate checking happens
-    against whatever is already sitting in the bubbles.
+    WORD DICTIONARIES
+    Each language has its own list of real words. Words
+    are stored together with a language tag so the correct
+    flag/label can be shown and duplicates can still be
+    checked against whatever is already sitting in the
+    bubbles (matched on the word text itself).
     =====================================================
     */
 
-    const englishWords = [
-        "Apple","Banana","Orange","Grape","Lemon","Peach","Mango","Cherry","Melon","Berry",
-        "River","Mountain","Ocean","Forest","Desert","Island","Valley","Meadow","Canyon","Glacier",
-        "Sunset","Sunrise","Cloud","Storm","Breeze","Thunder","Rainbow","Shadow","Horizon","Twilight",
-        "Tiger","Eagle","Dolphin","Panther","Falcon","Otter","Wolf","Fox","Rabbit","Owl",
-        "Guitar","Piano","Violin","Drum","Trumpet","Flute","Harp","Cello","Banjo","Clarinet",
-        "Castle","Bridge","Tower","Garden","Harbor","Village","Cottage","Palace","Fountain","Lighthouse",
-        "Whisper","Echo","Flame","Spark","Frost","Mist","Dew","Ember","Blaze","Ripple",
-        "Journey","Voyage","Quest","Adventure","Expedition","Pilgrimage","Odyssey","Excursion","Trek","Wander",
-        "Wisdom","Courage","Honor","Justice","Freedom","Harmony","Serenity","Triumph","Destiny","Legacy",
-        "Crystal","Diamond","Emerald","Sapphire","Amber","Pearl","Opal","Jade","Ruby","Topaz",
-        "Comet","Meteor","Nebula","Galaxy","Cosmos","Orbit","Eclipse","Aurora","Zenith","Satellite",
-        "Whistle","Melody","Rhythm","Chorus","Ballad","Serenade","Anthem","Sonata","Symphony","Lullaby",
-        "Brave","Gentle","Swift","Quiet","Bright","Bold","Calm","Clever","Fierce","Graceful",
-        "Golden","Silver","Crimson","Azure","Ivory","Scarlet","Violet","Copper","Bronze","Turquoise",
-        "Dream","Hope","Wonder","Magic","Mystery","Fantasy","Legend","Myth","Fable","Story",
-        "Ancient","Modern","Timeless","Eternal","Infinite","Endless","Boundless","Vast","Immense","Grand",
-        "Whale","Shark","Turtle","Seal","Penguin","Walrus","Octopus","Starfish","Coral","Anchor",
-        "Lantern","Candle","Torch","Beacon","Glow","Shine","Gleam","Flicker","Radiance","Luster",
-        "Path","Trail","Road","Route","Passage","Crossing","Junction","Gateway","Threshold","Corridor",
-        "Feather","Petal","Blossom","Bloom","Leaf","Branch","Root","Seed","Sprout","Vine",
-        "Whisker","Paw","Claw","Wing","Fin","Tail","Mane","Horn","Antler","Hoof",
-        "Puzzle","Riddle","Enigma","Secret","Clue","Cipher","Code","Key","Lock","Vault",
-        "Marble","Granite","Quartz","Slate","Clay","Sand","Stone","Pebble","Boulder","Cliff",
-        "Autumn","Winter","Spring","Summer","Harvest","Bloom","Thaw","Solstice","Equinox","Season",
-        "Sparrow","Robin","Heron","Crane","Swan","Peacock","Raven","Dove","Finch","Sparrowhawk",
-        "Charm","Grace","Elegance","Beauty","Splendor","Glory","Majesty","Brilliance","Wonder","Poise",
-        "Compass","Map","Sail","Mast","Deck","Hull","Rudder","Helm","Anchorage","Voyager",
-        "Prairie","Savanna","Tundra","Marsh","Swamp","Lagoon","Reef","Cove","Bay","Delta",
-        "Quiver","Shield","Sword","Armor","Helmet","Banner","Crest","Emblem","Insignia","Blade",
-        "Phoenix","Griffin","Dragon","Unicorn","Pegasus","Centaur","Mermaid","Sphinx","Titan","Oracle",
-        "Chime","Bell","Gong","Drumbeat","Cadence","Tempo","Pulse","Beat","Groove","Harmony",
-        "Shimmer","Glimmer","Flash","Sparkle","Twinkle","Glow","Radiant","Luminous","Vivid","Dazzle",
-        "Migration","Pilgrimage","Wandering","Roaming","Exploring","Venturing","Discovery","Frontier","Horizon","Journeyman",
-        "Silence","Stillness","Calm","Peace","Quietude","Tranquility","Serenity","Repose","Rest","Solitude",
-        "Lightning","Tempest","Cyclone","Hurricane","Tornado","Blizzard","Monsoon","Gale","Squall","Downpour",
-        "Velvet","Silk","Satin","Linen","Wool","Cotton","Cashmere","Suede","Leather","Denim",
-        "Whistle","Trumpet","Anthem","Fanfare","Overture","Prelude","Refrain","Verse","Chorus","Interlude",
-        "Meadowlark","Kingfisher","Hummingbird","Woodpecker","Nightingale","Cardinal","Mockingbird","Bluebird","Blackbird","Starling",
-        "Cinnamon","Vanilla","Nutmeg","Saffron","Ginger","Clove","Basil","Mint","Sage","Thyme",
-        "Marble","Ivory","Alabaster","Obsidian","Amethyst","Citrine","Garnet","Onyx","Moonstone","Peridot",
-        "Willow","Maple","Cedar","Birch","Oak","Pine","Elm","Aspen","Redwood","Sycamore"
-    ];
+    const wordBank = {
+        en: {
+            label: "English",
+            flag: "EN",
+            words: [
+                "Apple","Banana","Orange","Grape","Lemon","Peach","Mango","Cherry","Melon","Berry",
+                "River","Mountain","Ocean","Forest","Desert","Island","Valley","Meadow","Canyon","Glacier",
+                "Sunset","Sunrise","Cloud","Storm","Breeze","Thunder","Rainbow","Shadow","Horizon","Twilight",
+                "Tiger","Eagle","Dolphin","Panther","Falcon","Otter","Wolf","Fox","Rabbit","Owl",
+                "Guitar","Piano","Violin","Drum","Trumpet","Flute","Harp","Cello","Banjo","Clarinet",
+                "Castle","Bridge","Tower","Garden","Harbor","Village","Cottage","Palace","Fountain","Lighthouse",
+                "Whisper","Echo","Flame","Spark","Frost","Mist","Dew","Ember","Blaze","Ripple",
+                "Journey","Voyage","Quest","Adventure","Expedition","Pilgrimage","Odyssey","Excursion","Trek","Wander",
+                "Wisdom","Courage","Honor","Justice","Freedom","Harmony","Serenity","Triumph","Destiny","Legacy",
+                "Crystal","Diamond","Emerald","Sapphire","Amber","Pearl","Opal","Jade","Ruby","Topaz",
+                "Comet","Meteor","Nebula","Galaxy","Cosmos","Orbit","Eclipse","Aurora","Zenith","Satellite",
+                "Whistle","Melody","Rhythm","Chorus","Ballad","Serenade","Anthem","Sonata","Symphony","Lullaby",
+                "Brave","Gentle","Swift","Quiet","Bright","Bold","Calm","Clever","Fierce","Graceful",
+                "Golden","Silver","Crimson","Azure","Ivory","Scarlet","Violet","Copper","Bronze","Turquoise",
+                "Dream","Hope","Wonder","Magic","Mystery","Fantasy","Legend","Myth","Fable","Story",
+                "Ancient","Modern","Timeless","Eternal","Infinite","Endless","Boundless","Vast","Immense","Grand",
+                "Whale","Shark","Turtle","Seal","Penguin","Walrus","Octopus","Starfish","Coral","Anchor",
+                "Lantern","Candle","Torch","Beacon","Glow","Shine","Gleam","Flicker","Radiance","Luster",
+                "Path","Trail","Road","Route","Passage","Crossing","Junction","Gateway","Threshold","Corridor",
+                "Feather","Petal","Blossom","Bloom","Leaf","Branch","Root","Seed","Sprout","Vine",
+                "Whisker","Paw","Claw","Wing","Fin","Tail","Mane","Horn","Antler","Hoof",
+                "Puzzle","Riddle","Enigma","Secret","Clue","Cipher","Code","Key","Lock","Vault",
+                "Marble","Granite","Quartz","Slate","Clay","Sand","Stone","Pebble","Boulder","Cliff",
+                "Autumn","Winter","Spring","Summer","Harvest","Bloom","Thaw","Solstice","Equinox","Season",
+                "Sparrow","Robin","Heron","Crane","Swan","Peacock","Raven","Dove","Finch","Sparrowhawk",
+                "Charm","Grace","Elegance","Beauty","Splendor","Glory","Majesty","Brilliance","Wonder","Poise",
+                "Compass","Map","Sail","Mast","Deck","Hull","Rudder","Helm","Anchorage","Voyager",
+                "Prairie","Savanna","Tundra","Marsh","Swamp","Lagoon","Reef","Cove","Bay","Delta",
+                "Quiver","Shield","Sword","Armor","Helmet","Banner","Crest","Emblem","Insignia","Blade",
+                "Phoenix","Griffin","Dragon","Unicorn","Pegasus","Centaur","Mermaid","Sphinx","Titan","Oracle",
+                "Chime","Bell","Gong","Drumbeat","Cadence","Tempo","Pulse","Beat","Groove","Harmony",
+                "Shimmer","Glimmer","Flash","Sparkle","Twinkle","Glow","Radiant","Luminous","Vivid","Dazzle",
+                "Migration","Pilgrimage","Wandering","Roaming","Exploring","Venturing","Discovery","Frontier","Horizon","Journeyman",
+                "Silence","Stillness","Calm","Peace","Quietude","Tranquility","Serenity","Repose","Rest","Solitude",
+                "Lightning","Tempest","Cyclone","Hurricane","Tornado","Blizzard","Monsoon","Gale","Squall","Downpour",
+                "Velvet","Silk","Satin","Linen","Wool","Cotton","Cashmere","Suede","Leather","Denim",
+                "Meadowlark","Kingfisher","Hummingbird","Woodpecker","Nightingale","Cardinal","Mockingbird","Bluebird","Blackbird","Starling",
+                "Cinnamon","Vanilla","Nutmeg","Saffron","Ginger","Clove","Basil","Mint","Sage","Thyme",
+                "Alabaster","Obsidian","Amethyst","Citrine","Garnet","Onyx","Moonstone","Peridot",
+                "Willow","Maple","Cedar","Birch","Oak","Pine","Elm","Aspen","Redwood","Sycamore"
+            ]
+        },
+        es: {
+            label: "Espanol",
+            flag: "ES",
+            words: [
+                "Manzana","Platano","Naranja","Uva","Limon","Durazno","Mango","Cereza","Melon","Fresa",
+                "Rio","Montana","Oceano","Bosque","Desierto","Isla","Valle","Pradera","Canon","Glaciar",
+                "Atardecer","Amanecer","Nube","Tormenta","Brisa","Trueno","Arcoiris","Sombra","Horizonte","Crepusculo",
+                "Tigre","Aguila","Delfin","Pantera","Halcon","Nutria","Lobo","Zorro","Conejo","Buho",
+                "Guitarra","Piano","Violin","Tambor","Trompeta","Flauta","Arpa","Violonchelo","Banjo","Clarinete",
+                "Castillo","Puente","Torre","Jardin","Puerto","Aldea","Cabana","Palacio","Fuente","Faro",
+                "Susurro","Eco","Llama","Chispa","Escarcha","Neblina","Rocio","Brasa","Fulgor","Onda",
+                "Viaje","Travesia","Busqueda","Aventura","Expedicion","Peregrinaje","Odisea","Excursion","Caminata","Vagar",
+                "Sabiduria","Valentia","Honor","Justicia","Libertad","Armonia","Serenidad","Triunfo","Destino","Legado",
+                "Cristal","Diamante","Esmeralda","Zafiro","Ambar","Perla","Opalo","Jade","Rubi","Topacio",
+                "Cometa","Meteoro","Nebulosa","Galaxia","Cosmos","Orbita","Eclipse","Aurora","Cenit","Satelite",
+                "Silbido","Melodia","Ritmo","Coro","Balada","Serenata","Himno","Sonata","Sinfonia","Nana",
+                "Valiente","Amable","Veloz","Silencioso","Brillante","Audaz","Tranquilo","Astuto","Feroz","Elegante",
+                "Dorado","Plateado","Carmesi","Azul","Marfil","Escarlata","Violeta","Cobre","Bronce","Turquesa",
+                "Sueno","Esperanza","Maravilla","Magia","Misterio","Fantasia","Leyenda","Mito","Fabula","Cuento",
+                "Antiguo","Moderno","Eterno","Infinito","Interminable","Ilimitado","Vasto","Inmenso","Grandioso","Colosal",
+                "Ballena","Tiburon","Tortuga","Foca","Pinguino","Morsa","Pulpo","Estrella","Coral","Ancla",
+                "Linterna","Vela","Antorcha","Faro","Resplandor","Brillo","Destello","Fulgor","Luz","Lustre",
+                "Sendero","Camino","Carretera","Ruta","Pasaje","Cruce","Union","Puerta","Umbral","Corredor",
+                "Pluma","Petalo","Flor","Florecer","Hoja","Rama","Raiz","Semilla","Brote","Enredadera",
+                "Bigote","Pata","Garra","Ala","Aleta","Cola","Melena","Cuerno","Pezuna","Casco",
+                "Rompecabezas","Enigma","Secreto","Pista","Cifrado","Codigo","Llave","Candado","Boveda","Tesoro",
+                "Marmol","Granito","Cuarzo","Pizarra","Arcilla","Arena","Piedra","Guijarro","Roca","Acantilado",
+                "Otono","Invierno","Primavera","Verano","Cosecha","Floracion","Deshielo","Solsticio","Equinoccio","Estacion",
+                "Gorrion","Petirrojo","Garza","Grulla","Cisne","Pavo","Cuervo","Paloma","Pinzon","Colibri",
+                "Encanto","Gracia","Elegancia","Belleza","Esplendor","Gloria","Majestad","Brillantez","Asombro","Porte",
+                "Brujula","Mapa","Vela","Mastil","Cubierta","Casco","Timon","Popa","Fondeadero","Navegante",
+                "Pradera","Sabana","Tundra","Pantano","Cienaga","Laguna","Arrecife","Cala","Bahia","Delta",
+                "Aljaba","Escudo","Espada","Armadura","Casco","Estandarte","Cresta","Emblema","Insignia","Filo",
+                "Fenix","Grifo","Dragon","Unicornio","Pegaso","Centauro","Sirena","Esfinge","Titan","Oraculo",
+                "Campana","Cascabel","Gong","Redoble","Cadencia","Tempo","Pulso","Compas","Ritmo","Armonia",
+                "Destello","Centelleo","Chispazo","Brillo","Titileo","Resplandor","Radiante","Luminoso","Vivido","Deslumbrante",
+                "Migracion","Peregrinaje","Errante","Vagabundeo","Exploracion","Aventurarse","Descubrimiento","Frontera","Horizonte","Andariego",
+                "Silencio","Quietud","Calma","Paz","Sosiego","Tranquilidad","Serenidad","Reposo","Descanso","Soledad",
+                "Rayo","Tempestad","Ciclon","Huracan","Tornado","Ventisca","Monzon","Vendaval","Chubasco","Aguacero",
+                "Terciopelo","Seda","Raso","Lino","Lana","Algodon","Cachemira","Ante","Cuero","Mezclilla",
+                "Alondra","Martin Pescador","Colibri","Pajaro Carpintero","Ruisenor","Cardenal","Sinsonte","Azulejo","Mirlo","Estornino",
+                "Canela","Vainilla","Nuez Moscada","Azafran","Jengibre","Clavo","Albahaca","Menta","Salvia","Tomillo",
+                "Alabastro","Obsidiana","Amatista","Citrino","Granate","Onice","Piedra Lunar","Peridoto",
+                "Sauce","Arce","Cedro","Abedul","Roble","Pino","Olmo","Alamo","Secuoya","Sicomoro"
+            ]
+        },
+        zh: {
+            label: "Zhongwen",
+            flag: "ZH",
+            words: [
+                "苹果","香蕉","橙子","葡萄","柠檬","桃子","芒果","樱桃","甜瓜","草莓",
+                "河流","山脉","海洋","森林","沙漠","岛屿","山谷","草地","峡谷","冰川",
+                "日落","日出","云","风暴","微风","雷声","彩虹","阴影","地平线","黄昏",
+                "老虎","鹰","海豚","豹","猎鹰","水獭","狼","狐狸","兔子","猫头鹰",
+                "吉他","钢琴","小提琴","鼓","小号","长笛","竖琴","大提琴","班卓琴","单簧管",
+                "城堡","桥","塔","花园","港口","村庄","小屋","宫殿","喷泉","灯塔",
+                "低语","回声","火焰","火花","霜","薄雾","露水","余烬","烈焰","涟漪",
+                "旅程","航行","探索","冒险","远征","朝圣","奥德赛","远足","跋涉","漫游",
+                "智慧","勇气","荣誉","正义","自由","和谐","宁静","胜利","命运","遗产",
+                "水晶","钻石","翡翠","蓝宝石","琥珀","珍珠","蛋白石","玉","红宝石","黄玉",
+                "彗星","流星","星云","银河","宇宙","轨道","日食","极光","顶点","卫星",
+                "口哨","旋律","节奏","合唱","民谣","小夜曲","颂歌","奏鸣曲","交响曲","摇篮曲",
+                "勇敢","温柔","敏捷","安静","明亮","大胆","平静","聪明","凶猛","优雅",
+                "金色","银色","深红","天蓝","象牙","猩红","紫罗兰","铜色","青铜","绿松石",
+                "梦想","希望","惊奇","魔法","神秘","幻想","传说","神话","寓言","故事",
+                "古老","现代","永恒","无限","无尽","无边","浩瀚","巨大","宏伟","壮丽",
+                "鲸鱼","鲨鱼","海龟","海豹","企鹅","海象","章鱼","海星","珊瑚","锚",
+                "灯笼","蜡烛","火把","灯塔","光辉","光泽","微光","闪烁","辐射","光泽",
+                "小路","小径","道路","路线","通道","路口","枢纽","门户","门槛","走廊",
+                "羽毛","花瓣","花朵","盛开","叶子","树枝","根","种子","嫩芽","藤蔓",
+                "胡须","爪","利爪","翅膀","鳍","尾巴","鬃毛","角","鹿角","蹄",
+                "谜题","谜语","难题","秘密","线索","密码","代码","钥匙","锁","金库",
+                "大理石","花岗岩","石英","板岩","粘土","沙","石头","卵石","巨石","悬崖",
+                "秋天","冬天","春天","夏天","丰收","花开","解冻","至日","分点","季节",
+                "麻雀","知更鸟","苍鹭","鹤","天鹅","孔雀","乌鸦","鸽子","雀","蜂鸟",
+                "魅力","优雅","高雅","美丽","辉煌","荣耀","威严","光彩","惊叹","风度",
+                "指南针","地图","帆","桅杆","甲板","船体","舵","方向盘","锚地","航海者",
+                "草原","热带草原","苔原","沼泽","湿地","泻湖","礁石","小海湾","海湾","三角洲",
+                "箭袋","盾牌","剑","盔甲","头盔","旗帜","冠饰","徽章","徽记","刀刃",
+                "凤凰","狮鹫","龙","独角兽","飞马","半人马","美人鱼","狮身人面像","泰坦","神谕",
+                "钟声","铃铛","锣","鼓点","节拍","速度","脉搏","律动","律动感","和声",
+                "闪光","微光","闪烁","火花","眨眼","辉光","光辉","明亮","生动","眩目",
+                "迁徙","朝圣","漂泊","漫游","探索","冒险","发现","边疆","地平线","旅人",
+                "寂静","静谧","平静","和平","安宁","宁静","安详","休憩","休息","孤独",
+                "闪电","暴风雨","气旋","飓风","龙卷风","暴风雪","季风","大风","暴风","倾盆大雨",
+                "天鹅绒","丝绸","缎子","亚麻","羊毛","棉花","羊绒","麂皮","皮革","牛仔布",
+                "云雀","翠鸟","蜂鸟","啄木鸟","夜莺","红雀","仿声鸟","蓝鸟","乌鸫","椋鸟",
+                "肉桂","香草","肉豆蔻","藏红花","生姜","丁香","罗勒","薄荷","鼠尾草","百里香",
+                "雪花石膏","黑曜石","紫水晶","黄水晶","石榴石","缟玛瑙","月光石","橄榄石",
+                "柳树","枫树","雪松","桦树","橡树","松树","榆树","白杨","红杉","梧桐"
+            ]
+        }
+    };
+
+    // All languages are always in play - a random one is picked each time
+    const allLanguages = Object.keys(wordBank);
 
     function randomFrom(list) {
         return list[Math.floor(Math.random() * list.length)];
@@ -320,7 +433,8 @@
     CONTENT FILTER
     Screens out generated words that happen to contain a
     common vulgar/adult substring, so nothing embarrassing
-    or filter-triggering slips through by chance.
+    or filter-triggering slips through by chance. This only
+    meaningfully applies to Latin-script languages.
     =====================================================
     */
 
@@ -376,6 +490,7 @@
 
     const STORAGE_KEY = "wordGenClickedTimes";
     const WORDS_KEY = "wordGenGeneratedWords";
+    const LANGS_KEY = "wordGenGeneratedLangs";
     const POSITION_KEY = "wordGenLastColumn";
 
     function getClickedTimes() {
@@ -396,6 +511,7 @@
     /*
     =====================================================
     GENERATED WORDS (ONE SLOT PER BUBBLE, NULL = EMPTY)
+    Each slot has a matching language code in generatedLangs.
     =====================================================
     */
 
@@ -406,7 +522,6 @@
             const parsed = JSON.parse(saved);
             if (!Array.isArray(parsed)) return new Array(capacity).fill(null);
 
-            // Resize gracefully if capacity ever changes
             const resized = new Array(capacity).fill(null);
             for (let i = 0; i < Math.min(parsed.length, capacity); i++) {
                 resized[i] = parsed[i];
@@ -418,11 +533,34 @@
         }
     }
 
+    function getGeneratedLangs() {
+        const saved = localStorage.getItem(LANGS_KEY);
+        if (!saved) return new Array(capacity).fill(null);
+        try {
+            const parsed = JSON.parse(saved);
+            if (!Array.isArray(parsed)) return new Array(capacity).fill(null);
+
+            const resized = new Array(capacity).fill(null);
+            for (let i = 0; i < Math.min(parsed.length, capacity); i++) {
+                resized[i] = parsed[i];
+            }
+            return resized;
+        } catch (error) {
+            console.error("Error reading saved langs:", error);
+            return new Array(capacity).fill(null);
+        }
+    }
+
     function saveGeneratedWords(words) {
         localStorage.setItem(WORDS_KEY, JSON.stringify(words));
     }
 
+    function saveGeneratedLangs(langs) {
+        localStorage.setItem(LANGS_KEY, JSON.stringify(langs));
+    }
+
     let generatedWords = getGeneratedWords();
+    let generatedLangs = getGeneratedLangs();
 
     /*
     =====================================================
@@ -481,27 +619,38 @@
 
         const startIndex = currentColumn * slotsPerColumn;
         const endIndex = startIndex + (slotsPerColumn * visibleColumns);
-        const visibleSlots = generatedWords.slice(startIndex, endIndex);
+        const visibleWords = generatedWords.slice(startIndex, endIndex);
+        const visibleLangs = generatedLangs.slice(startIndex, endIndex);
 
         const clickedTimes = getClickedTimes();
 
-        visibleSlots.forEach(word => {
+        visibleWords.forEach((word, i) => {
 
+            const lang = visibleLangs[i];
             const button = document.createElement("button");
             button.className = "country-button";
 
             if (word) {
-                button.innerText = word;
+                const wordSpan = document.createElement("span");
+                wordSpan.innerText = word;
+                button.appendChild(wordSpan);
+
+                if (lang && wordBank[lang]) {
+                    const flagSpan = document.createElement("span");
+                    flagSpan.className = "word-flag";
+                    flagSpan.innerText = wordBank[lang].flag;
+                    button.appendChild(flagSpan);
+                }
+
                 button.dataset.word = word;
 
                 const status = getWordStatus(word, clickedTimes);
                 applyWordStatus(button, status);
 
                 button.onclick = function() {
-                    copyWord(button, word);
+                    copyWord(button, word, wordSpan);
                 };
             } else {
-                button.innerText = "";
                 button.classList.add("empty");
                 button.disabled = true;
             }
@@ -544,6 +693,8 @@
     /*
     =====================================================
     GENERATE WORD
+    - Picks a random language (English, Spanish, or Chinese)
+      each time, then a random word from that language's list.
     - New word always lands in the first bubble.
     - Everything else shifts down one slot (down the column,
       then into the next column), and whatever falls off the
@@ -556,17 +707,23 @@
 
         const usedWords = new Set(generatedWords.filter(w => w !== null));
 
-        let newWord;
+        let newWord = null;
+        let newLang = null;
         let attempts = 0;
-        do {
-            newWord = randomFrom(englishWords);
-            attempts++;
-        } while (
-            (usedWords.has(newWord) || containsBannedSubstring(newWord)) &&
-            attempts < 50
-        );
 
-        if (usedWords.has(newWord) || containsBannedSubstring(newWord)) {
+        do {
+            const lang = randomFrom(allLanguages);
+            const candidate = randomFrom(wordBank[lang].words);
+            attempts++;
+
+            if (!usedWords.has(candidate) && !containsBannedSubstring(candidate)) {
+                newWord = candidate;
+                newLang = lang;
+                break;
+            }
+        } while (attempts < 50);
+
+        if (!newWord) {
             window.alert("Couldn't come up with a suitable word - try again.");
             return;
         }
@@ -576,7 +733,11 @@
         // off the end (120th slot) is dropped.
         generatedWords.unshift(newWord);
         generatedWords.pop();
+        generatedLangs.unshift(newLang);
+        generatedLangs.pop();
+
         saveGeneratedWords(generatedWords);
+        saveGeneratedLangs(generatedLangs);
 
         // Jump the view back to the first page so the new word is visible
         currentColumn = 0;
@@ -650,7 +811,7 @@
         }
     }
 
-    function copyWord(button, word) {
+    function copyWord(button, word, wordSpan) {
 
         const clickedTimes = getClickedTimes();
         clickedTimes[word] = Date.now();
@@ -664,7 +825,8 @@
             copyTextFallback(word);
         }
 
-        button.innerText = "Copied!";
+        const originalText = wordSpan.innerText;
+        wordSpan.innerText = "Copied!";
         button.classList.remove(
             "status-orange",
             "status-yellow",
@@ -673,7 +835,7 @@
         button.classList.add("status-red");
 
         setTimeout(function() {
-            button.innerText = word;
+            wordSpan.innerText = originalText;
         }, 1000);
     }
 
@@ -717,7 +879,9 @@
         }
 
         localStorage.removeItem(WORDS_KEY);
+        localStorage.removeItem(LANGS_KEY);
         generatedWords = new Array(capacity).fill(null);
+        generatedLangs = new Array(capacity).fill(null);
 
         showWords();
     }
@@ -735,7 +899,9 @@
 
         buttons.forEach(button => {
             const word = button.dataset.word;
-            if (!word || button.innerText === "Copied!") return;
+            if (!word) return;
+            const wordSpan = button.querySelector("span:not(.word-flag)");
+            if (wordSpan && wordSpan.innerText === "Copied!") return;
 
             const status = getWordStatus(word, clickedTimes);
             applyWordStatus(button, status);
