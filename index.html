@@ -204,6 +204,17 @@
 
     .country-button:active { transform: scale(0.95); }
 
+    /* SINGLE TALL BUTTON - FIRST COLUMN, SPANS THE HEIGHT OF ALL 15 ROWS */
+    .country-button.single-slot {
+        grid-row: span 15;
+        font-size: 16px;
+    }
+
+    .country-button.single-slot .word-flag {
+        font-size: 13px;
+        margin-top: 4px;
+    }
+
     /* EMPTY BUBBLE - NOT YET GENERATED */
     .country-button.empty {
         background: rgba(255, 255, 255, 0.4);
@@ -218,25 +229,25 @@
     =====================================================
     */
 
-    /* CLICKED - LESS THAN 24 HOURS */
+    /* CLICKED - LESS THAN 4 HOURS */
     .country-button.status-red {
         background: #ff6b6b;
         color: #000;
     }
 
-    /* 24 HOURS TO LESS THAN 48 HOURS */
+    /* 4 HOURS TO LESS THAN 28 HOURS */
     .country-button.status-orange {
         background: #ffa94d;
         color: #000;
     }
 
-    /* 48 HOURS TO LESS THAN 72 HOURS */
+    /* 28 HOURS TO LESS THAN 52 HOURS */
     .country-button.status-yellow {
         background: #ffe066;
         color: #000;
     }
 
-    /* 72 HOURS TO LESS THAN 96 HOURS */
+    /* 52 HOURS TO LESS THAN 76 HOURS */
     .country-button.status-light-yellow {
         background: #fff3bf;
         color: #000;
@@ -453,15 +464,22 @@
     /*
     =====================================================
     SETTINGS
-    8 COLUMNS MAX, 15 SLOTS PER COLUMN, 4 COLUMNS VISIBLE
+    COLUMN 0 = ONE TALL BUTTON (1 slot, spans all 15 rows)
+    COLUMNS 1-8 = 15 SLOTS EACH
+    4 COLUMNS VISIBLE AT A TIME
     =====================================================
     */
 
     const slotsPerColumn = 15;
     const visibleColumns = 4;
-    const totalColumns = 8;
-    const capacity = totalColumns * slotsPerColumn; // 120 slots total
+    const totalColumns = 9;                                   // 1 single + 8 full columns
+    const capacity = 1 + (totalColumns - 1) * slotsPerColumn; // 121 slots total
     const maxColumnOffset = totalColumns - visibleColumns;
+
+    // First slot index for a given column
+    function columnStartIndex(col) {
+        return col === 0 ? 0 : 1 + (col - 1) * slotsPerColumn;
+    }
 
     let currentColumn = 0;
 
@@ -477,10 +495,12 @@
     */
 
     const ONE_HOUR = 60 * 60 * 1000;
-    const TWENTY_FOUR_HOURS = 24 * ONE_HOUR;
-    const FORTY_EIGHT_HOURS = 48 * ONE_HOUR;
-    const SEVENTY_TWO_HOURS = 72 * ONE_HOUR;
-    const NINETY_SIX_HOURS = 96 * ONE_HOUR;
+
+    // Red lasts 4 hours, then every other colour lasts 24 hours
+    const RED_END = 4 * ONE_HOUR;                  // 0h  - 4h   red
+    const ORANGE_END = RED_END + 24 * ONE_HOUR;    // 4h  - 28h  orange
+    const YELLOW_END = ORANGE_END + 24 * ONE_HOUR; // 28h - 52h  yellow
+    const LIGHT_YELLOW_END = YELLOW_END + 24 * ONE_HOUR; // 52h - 76h light yellow, then normal
 
     /*
     =====================================================
@@ -600,16 +620,18 @@
         const currentTime = Date.now();
         const elapsedTime = currentTime - clickedTime;
 
-        if (elapsedTime >= NINETY_SIX_HOURS) return "normal";
-        if (elapsedTime < TWENTY_FOUR_HOURS) return "red";
-        if (elapsedTime < FORTY_EIGHT_HOURS) return "orange";
-        if (elapsedTime < SEVENTY_TWO_HOURS) return "yellow";
+        if (elapsedTime >= LIGHT_YELLOW_END) return "normal";
+        if (elapsedTime < RED_END) return "red";
+        if (elapsedTime < ORANGE_END) return "orange";
+        if (elapsedTime < YELLOW_END) return "yellow";
         return "light-yellow";
     }
 
     /*
     =====================================================
     DISPLAY WORD BUBBLES (FILLED + EMPTY)
+    Column 0 is one button spanning all 15 rows; the other
+    visible columns are 15 normal buttons each.
     =====================================================
     */
 
@@ -617,18 +639,34 @@
 
         countryList.innerHTML = "";
 
-        const startIndex = currentColumn * slotsPerColumn;
-        const endIndex = startIndex + (slotsPerColumn * visibleColumns);
-        const visibleWords = generatedWords.slice(startIndex, endIndex);
-        const visibleLangs = generatedLangs.slice(startIndex, endIndex);
-
         const clickedTimes = getClickedTimes();
 
-        visibleWords.forEach((word, i) => {
+        // Build the list of slot indexes for the visible columns
+        const cells = [];
 
-            const lang = visibleLangs[i];
+        for (let col = currentColumn; col < currentColumn + visibleColumns; col++) {
+            if (col >= totalColumns) break;
+
+            if (col === 0) {
+                cells.push({ index: 0, single: true });
+            } else {
+                const start = columnStartIndex(col);
+                for (let s = 0; s < slotsPerColumn; s++) {
+                    cells.push({ index: start + s, single: false });
+                }
+            }
+        }
+
+        cells.forEach(cell => {
+
+            const word = generatedWords[cell.index];
+            const lang = generatedLangs[cell.index];
             const button = document.createElement("button");
             button.className = "country-button";
+
+            if (cell.single) {
+                button.classList.add("single-slot");
+            }
 
             if (word) {
                 const wordSpan = document.createElement("span");
@@ -695,10 +733,11 @@
     GENERATE WORD
     - Picks a random language (English, Spanish, or Chinese)
       each time, then a random word from that language's list.
-    - New word always lands in the first bubble.
-    - Everything else shifts down one slot (down the column,
-      then into the next column), and whatever falls off the
-      end of the 120th slot is dropped.
+    - New word always lands in the single tall button.
+    - The word that was there drops into the top of column 2,
+      and everything else shifts down one slot (down the column,
+      then into the next column). Whatever falls off the end of
+      the last slot is dropped.
     - Never repeats a word already sitting in a bubble.
     =====================================================
     */
@@ -728,9 +767,6 @@
             return;
         }
 
-        // New word always goes in the very first bubble.
-        // Everything else shifts down one slot; whatever falls
-        // off the end (120th slot) is dropped.
         generatedWords.unshift(newWord);
         generatedWords.pop();
         generatedLangs.unshift(newLang);
@@ -864,7 +900,7 @@
     /*
     =====================================================
     CLEAR WORDS
-    EMPTIES ALL 120 BUBBLES (WORDS ONLY - COLOURS UNTOUCHED)
+    EMPTIES ALL 121 BUBBLES (WORDS ONLY - COLOURS UNTOUCHED)
     =====================================================
     */
 
