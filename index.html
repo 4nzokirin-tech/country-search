@@ -75,17 +75,6 @@
             "can you help me write a birthday message","how to grow tomatoes on a balcony","what are the symptoms of a cold",
             "how do i cancel my subscription","how to meditate for beginners","where is the nearest atm","how to tie a tie step by step"
         ]},
-        es: { flag: "ES", words: [
-            "como puedo cambiar mi contrasena","cual es la mejor forma de aprender ingles","por que mi telefono se queda sin bateria tan rapido",
-            "donde puedo comprar boletos baratos de avion","que puedo cocinar para la cena de hoy","como bajar de peso sin ir al gimnasio",
-            "cuanto tiempo se tarda en hervir un huevo","a que hora cierra la farmacia","como convertir un pdf a word",
-            "cuanta agua debo tomar al dia","como arreglar una llave que gotea","que hacer cuando no puedes dormir",
-            "como hacer un curriculum para un trabajo","quien gano el partido de anoche","como empezar un negocio desde casa",
-            "es normal sentirse cansado todo el tiempo","como quitar una mancha de una camisa blanca","que regalo le puedo dar a mi mama",
-            "como pedir una cita medica en linea","por que mi computadora esta tan lenta","como cancelar mi suscripcion",
-            "donde esta el cajero mas cercano","como aprender a programar gratis","cuales son los sintomas de un resfriado",
-            "como cultivar tomates en un balcon"
-        ]},
         zh: { flag: "ZH", words: [
             "怎么重置我的密码","学吉他最好的方法是什么","为什么我的手机电池掉得这么快","哪里可以买到便宜的机票","今晚晚饭做什么好呢",
             "不去健身房怎么减肥","煮一个鸡蛋需要多长时间","药店几点关门","怎么把pdf转换成word","每天应该喝多少水",
@@ -94,7 +83,8 @@
             "怎么取消订阅","最近的取款机在哪里","怎么免费学编程","感冒有哪些症状","阳台上怎么种番茄","附近有什么好吃的餐厅"
         ]}
     };
-    const allLanguages = Object.keys(wordBank);
+    // mostly English, Chinese only now and then (0.15 = about 1 in 7)
+    const CHINESE_CHANCE = 0.15;
 
     function randomFrom(list) { return list[Math.floor(Math.random() * list.length)]; }
     function randInt(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
@@ -307,13 +297,6 @@
                 wordSpan.innerText = word;
                 button.appendChild(wordSpan);
 
-                if (lang && wordBank[lang]) {
-                    const flagSpan = document.createElement("span");
-                    flagSpan.className = "word-flag";
-                    flagSpan.innerText = wordBank[lang].flag;
-                    button.appendChild(flagSpan);
-                }
-
                 button.dataset.word = word;
                 applyWordStatus(button, getWordStatus(word, clickedTimes));
                 button.onclick = function () { copyWord(button, word, wordSpan); };
@@ -334,7 +317,7 @@
         let newWord = null, newLang = null;
 
         for (let attempts = 0; attempts < 50; attempts++) {
-            const lang = randomFrom(allLanguages);
+            const lang = Math.random() < CHINESE_CHANCE ? "zh" : "en";
             const base = randomFrom(wordBank[lang].words);
             const candidate = mutatePhrase(base, lang);
             if (!used.has(candidate) && !containsBannedSubstring(candidate)) {
