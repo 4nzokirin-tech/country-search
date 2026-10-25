@@ -382,14 +382,21 @@
         times[word] = Date.now();
         saveClickedTimes(times);
 
+        // Copy the phrase to the clipboard.
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(word).catch(() => copyTextFallback(word));
         } else {
             copyTextFallback(word);
         }
 
+        // Open a new tab and search the phrase automatically.
+        // A normal webpage cannot send Ctrl+T / Ctrl+V / Enter to Chrome's UI,
+        // so use a Google search URL instead.
+        const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent(word);
+        window.open(searchUrl, "_blank", "noopener,noreferrer");
+
         const original = wordSpan.innerText;
-        wordSpan.innerText = "Copied!";
+        wordSpan.innerText = "Searching!";
         applyWordStatus(button, "red");
         setTimeout(() => { wordSpan.innerText = original; }, 1000);
     }
