@@ -359,6 +359,11 @@
         safeSet(LANGS_KEY, JSON.stringify(generatedLangs));
 
         showWords();
+
+        // Auto: copy the new phrase + open a new tab and search it (same as clicking the bubble)
+        const newButton = countryList.firstElementChild;
+        const newSpan = newButton && newButton.querySelector(".word-text");
+        if (newButton && newSpan) copyWord(newButton, newWord, newSpan);
     }
 
     /*
