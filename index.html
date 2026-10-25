@@ -60,27 +60,27 @@
     Each one gets damaged by the mutation engine below before it is shown.
     */
     const wordBank = {
-        en: { flag: "EN", words: [
-            "how do i reset my password","what is the best way to learn guitar","why is my phone battery draining so fast",
-            "can you recommend a good book to read","how long does it take to boil an egg","where can i buy cheap flights to bali",
-            "what should i cook for dinner tonight","how to lose weight without going to the gym","is it safe to eat leftover rice",
-            "how do i get rid of a headache fast","best restaurants near me open now","how to write a cover letter for a job",
-            "why does my dog keep scratching his ears","what time does the pharmacy close","how do i convert a pdf to word",
-            "how much water should i drink a day","how to fix a leaking kitchen tap","what is the difference between a virus and bacteria",
-            "can i travel with an expired passport","how to make my wifi signal stronger","what to do when you cant sleep at night",
-            "how do i change my email address on instagram","who won the football match last night","how to start a small business from home",
-            "is it normal to feel tired all the time","what is the weather like tomorrow","how do i learn to code for free",
-            "how to remove a stain from a white shirt","how many calories are in a banana","what is a good gift for my mother",
-            "how do i book a doctor appointment online","why is my laptop running so slow","how to say thank you in japanese",
-            "can you help me write a birthday message","how to grow tomatoes on a balcony","what are the symptoms of a cold",
-            "how do i cancel my subscription","how to meditate for beginners","where is the nearest atm","how to tie a tie step by step"
+        en: { flag: "EN", topics: [
+            ["why is my phone battery draining so fast","how to check which apps use the most battery","is it bad to charge my phone overnight","how much does a new phone battery cost"],
+            ["where can i buy cheap flights to bali","best time of year to visit bali","do i need a visa for bali","how many days is enough for bali"],
+            ["why does my dog keep scratching his ears","dog ear infection symptoms","how much does a vet visit cost","can i clean my dogs ears at home"],
+            ["how to write a cover letter for a job","what to put in a cover letter with no experience","how long should a resume be","how to ask for a salary in an interview"],
+            ["how to lose weight without going to the gym","how many calories should i eat a day","best home workout for beginners","how long does it take to see results"],
+            ["why is my wifi so slow","how to make my wifi signal stronger","should i buy a wifi extender","how to change my wifi password"],
+            ["what should i cook for dinner tonight","easy chicken recipes for beginners","how long to bake chicken thighs","what side dish goes with roasted chicken"],
+            ["what to do when you cant sleep at night","why do i wake up at 3am every night","is melatonin safe to take every day","how many hours of sleep do i need"],
+            ["why is my laptop running so slow","how to clear storage on windows 11","how to speed up startup","is it worth upgrading to an ssd"],
+            ["how to grow tomatoes on a balcony","how often should i water tomato plants","why are my tomato leaves turning yellow","when are tomatoes ready to pick"],
+            ["what is a good gift for my mother","gift ideas for mom under 50","how to wrap a gift nicely","what to write in a birthday card for mom"],
+            ["how do i reset my password","i forgot my email password what now","how to turn on two step verification","how to check if my account was hacked"],
+            ["what are the symptoms of a cold","how long does a cold usually last","is it flu or just a cold","when should i see a doctor for a cough"]
         ]},
-        zh: { flag: "ZH", words: [
-            "怎么重置我的密码","学吉他最好的方法是什么","为什么我的手机电池掉得这么快","哪里可以买到便宜的机票","今晚晚饭做什么好呢",
-            "不去健身房怎么减肥","煮一个鸡蛋需要多长时间","药店几点关门","怎么把pdf转换成word","每天应该喝多少水",
-            "厨房水龙头漏水怎么修","晚上睡不着觉怎么办","怎么写求职信","昨晚的足球比赛谁赢了","在家创业要怎么开始",
-            "总是觉得很累正常吗","白衬衫上的污渍怎么去除","送妈妈什么礼物比较好","怎么在网上预约医生","为什么我的电脑这么卡",
-            "怎么取消订阅","最近的取款机在哪里","怎么免费学编程","感冒有哪些症状","阳台上怎么种番茄","附近有什么好吃的餐厅"
+        zh: { flag: "ZH", topics: [
+            ["为什么我的手机电池掉得这么快","怎么查看哪个应用最耗电","晚上充电对电池不好吗","换手机电池大概多少钱"],
+            ["哪里可以买到便宜的机票","去日本旅游最好什么时候去","去日本需要办签证吗","东京五天四晚怎么安排"],
+            ["晚上睡不着觉怎么办","为什么我每天凌晨三点会醒","褪黑素可以每天吃吗","成年人每天需要睡几个小时"],
+            ["怎么写求职信","简历应该写几页","面试时怎么谈薪资","没有工作经验怎么找工作"],
+            ["不去健身房怎么减肥","每天应该吃多少卡路里","新手在家怎么锻炼","多久能看到效果"]
         ]}
     };
     // mostly English, Chinese only now and then (0.15 = about 1 in 7)
@@ -143,12 +143,12 @@
         cutOff(text) {
             // incomplete - stops mid-way, sometimes mid-word
             if (text.length < 14) return null;
-            return text.slice(0, randInt(Math.ceil(text.length * 0.5), text.length - 3)).trimEnd();
+            return text.slice(0, randInt(Math.ceil(text.length * 0.65), text.length - 3)).trimEnd();
         },
         cutWords(text) {
             const w = text.split(" ");
             if (w.length < 4) return null;
-            return w.slice(0, randInt(Math.ceil(w.length / 2), w.length - 1)).join(" ");
+            return w.slice(0, randInt(Math.ceil(w.length * 0.65), w.length - 1)).join(" ");
         }
     };
 
@@ -169,15 +169,16 @@
         cutOff(text) {
             const c = Array.from(text);
             if (c.length < 6) return null;
-            return c.slice(0, randInt(Math.ceil(c.length * 0.5), c.length - 1)).join("");
+            return c.slice(0, randInt(Math.ceil(c.length * 0.65), c.length - 1)).join("");
         }
     };
 
     function mutatePhrase(text, lang) {
         const set = lang === "zh" ? chineseMutations : latinMutations;
-        const names = Object.keys(set);
         let result = text;
         const passes = Math.random() < 0.35 ? 2 : 1;
+        // a cut-off phrase already looks incomplete, so never stack it with a second mistake
+        const names = Object.keys(set).filter(n => passes === 1 || !/^cut/.test(n));
         const used = new Set();
 
         for (let n = 0; n < passes; n++) {
@@ -309,28 +310,51 @@
     }
 
     /*
-    GENERATE - random language, random base phrase, then mutate it.
-    New phrase goes in the tall slot; everything else shifts down.
+    GENERATE - phrases come in groups of 4 that belong together, like one
+    person's search session: the 1st opens a topic, the 2nd-4th follow up on it.
+    The group position is remembered, so the 4th phrase always completes the
+    same topic as the previous 3. Then a new topic starts.
     */
+    const GROUP_KEY = "phraseGenGroup";
+    const GROUP_SIZE = 4;
+
+    function loadGroup() {
+        try {
+            const g = JSON.parse(safeGet(GROUP_KEY));
+            if (g && wordBank[g.lang] && wordBank[g.lang].topics[g.topic] && g.step >= 0 && g.step <= GROUP_SIZE) return g;
+        } catch (e) {}
+        return null;
+    }
+
+    function nextGroupPick() {
+        const prev = loadGroup();
+        if (prev && prev.step < GROUP_SIZE) return prev;
+
+        const lang = Math.random() < CHINESE_CHANCE ? "zh" : "en";
+        const count = wordBank[lang].topics.length;
+        let topic;
+        do { topic = randInt(0, count - 1); }
+        while (prev && prev.lang === lang && prev.topic === topic && count > 1);
+        return { lang, topic, step: 0 };
+    }
+
     function generateWord() {
         const used = new Set(generatedWords.filter(w => w !== null));
-        let newWord = null, newLang = null;
+        const g = nextGroupPick();
+        const base = wordBank[g.lang].topics[g.topic][g.step];
 
-        for (let attempts = 0; attempts < 50; attempts++) {
-            const lang = Math.random() < CHINESE_CHANCE ? "zh" : "en";
-            const base = randomFrom(wordBank[lang].words);
-            const candidate = mutatePhrase(base, lang);
-            if (!used.has(candidate) && !containsBannedSubstring(candidate)) {
-                newWord = candidate;
-                newLang = lang;
-                break;
-            }
+        let newWord = null;
+        for (let attempts = 0; attempts < 30; attempts++) {
+            const candidate = mutatePhrase(base, g.lang);
+            if (!used.has(candidate) && !containsBannedSubstring(candidate)) { newWord = candidate; break; }
         }
 
         if (!newWord) { window.alert("Couldn't come up with a suitable phrase - try again."); return; }
 
+        safeSet(GROUP_KEY, JSON.stringify({ lang: g.lang, topic: g.topic, step: g.step + 1 }));
+
         generatedWords.unshift(newWord); generatedWords.pop();
-        generatedLangs.unshift(newLang); generatedLangs.pop();
+        generatedLangs.unshift(g.lang); generatedLangs.pop();
         safeSet(WORDS_KEY, JSON.stringify(generatedWords));
         safeSet(LANGS_KEY, JSON.stringify(generatedLangs));
 
@@ -383,6 +407,7 @@
         if (!window.confirm("Clear all generated phrases? This will empty every bubble.")) return;
         safeRemove(WORDS_KEY);
         safeRemove(LANGS_KEY);
+        safeRemove(GROUP_KEY);
         generatedWords = new Array(capacity).fill(null);
         generatedLangs = new Array(capacity).fill(null);
         showWords();
