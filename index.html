@@ -3,440 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phrase Generator</title>
+<title>Word + Question Generator</title>
 <style>
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: Arial, sans-serif; }
-    body { background: #f5f5f5; display: flex; justify-content: center; align-items: center; }
-    .app { width: 100%; max-width: 900px; height: 100dvh; padding: 12px; display: flex; flex-direction: column; overflow: hidden; }
-    .header { flex: 0 0 96px; display: flex; flex-direction: column; justify-content: center; gap: 8px; overflow: hidden; }
-    .header-top, .header-bottom { display: flex; align-items: center; justify-content: center; gap: 10px; }
-    h1 { margin: 0; font-size: 18px; text-align: center; white-space: nowrap; }
-
-    button { font-family: inherit; }
-    .generate-button { height: 40px; border: none; border-radius: 8px; background: #51cf66; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); font-size: 15px; font-weight: bold; padding: 0 20px; cursor: pointer; transition: .15s; }
-    .generate-button:active { transform: scale(.92); }
-    .clear-button, .clear-words-button { height: 38px; border: none; border-radius: 8px; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); font-size: 13px; font-weight: bold; padding: 0 12px; cursor: pointer; transition: .15s; white-space: nowrap; }
-    .clear-button { background: #ff6b6b; }
-    .clear-words-button { background: #495057; }
-    .clear-button:active, .clear-words-button:active { transform: scale(.92); }
-
-    /* newest phrase on the left, 9 older ones on the right (10 total) */
-    .country-list { flex: 1; min-height: 0; width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(9, 1fr); grid-auto-flow: column; gap: 6px; overflow: hidden; }
-    .country-button { width: 100%; height: 100%; min-width: 0; min-height: 0; border: none; border-radius: 8px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,.15); font-size: 12px; font-weight: bold; cursor: pointer; padding: 4px 6px; overflow: hidden; transition: .15s; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; }
-    .country-button .word-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; word-break: break-word; text-align: center; }
-    .country-button .word-flag { font-size: 10px; opacity: .7; font-weight: normal; margin-top: 2px; }
-    .country-button:active { transform: scale(.97); }
-    .country-button.single-slot { grid-row: span 9; font-size: 20px; padding: 14px; }
-    .country-button.single-slot .word-text { -webkit-line-clamp: 12; }
-    .country-button.single-slot .word-flag { font-size: 13px; margin-top: 8px; }
-    .country-button.empty { background: rgba(255,255,255,.4); box-shadow: none; border: 1px dashed rgba(0,0,0,.15); cursor: default; }
-
-    .country-button.status-red { background: #ff6b6b; color: #000; }
-    .country-button.status-orange { background: #ffa94d; color: #000; }
-    .country-button.status-yellow { background: #ffe066; color: #000; }
-    .country-button.status-light-yellow { background: #fff3bf; color: #000; }
+    html, body { margin: 0; height: 100%; font-family: Arial, sans-serif; background: #f5f5f5; }
+    .app { max-width: 900px; height: 100dvh; margin: 0 auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+    .section { background: #fff; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,.12); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .section.words { flex: 0 0 auto; }
+    .section.questions { flex: 1; min-height: 0; }
+    h2 { margin: 0; font-size: 14px; color: #495057; text-transform: uppercase; letter-spacing: .5px; }
+    .row { display: flex; align-items: center; gap: 10px; }
+    button { font-family: inherit; border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; transition: .15s; box-shadow: 0 2px 5px rgba(0,0,0,.15); }
+    button:active { transform: scale(.95); }
+    .green { background: #51cf66; height: 40px; padding: 0 20px; font-size: 15px; }
+    .blue { background: #339af0; height: 40px; padding: 0 16px; font-size: 14px; }
+    .word-display { flex: 1; min-height: 40px; display: flex; align-items: center; font-size: 26px; font-weight: bold; color: #212529; overflow-wrap: anywhere; }
+    .word-display.empty { color: #adb5bd; font-size: 16px; font-weight: normal; }
+    .q-list { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); grid-auto-flow: column; gap: 8px; }
+    .q-btn { background: #fff; color: #000; border: 1px solid #dee2e6; min-height: 0; padding: 8px 10px; font-size: 14px; text-align: left; display: flex; flex-direction: column; justify-content: center; gap: 2px; box-shadow: 0 2px 5px rgba(0,0,0,.1); }
+    .q-btn .tag { font-size: 11px; font-weight: bold; color: #339af0; }
+    .q-btn .txt { font-weight: normal; line-height: 1.25; overflow: hidden; }
+    .q-btn.done { background: #ff6b6b; border-color: #ff6b6b; }
+    .q-btn.done .tag { color: #000; }
+    .q-btn:disabled { background: rgba(255,255,255,.5); border: 1px dashed rgba(0,0,0,.15); box-shadow: none; cursor: default; }
+    @media (max-width: 560px) {
+        .q-list { grid-template-columns: 1fr; grid-template-rows: repeat(6, 1fr); grid-auto-flow: row; }
+        .word-display { font-size: 22px; }
+    }
 </style>
 </head>
 <body>
-
 <div class="app">
-    <div class="header">
-        <div class="header-top">
-            <h1>Phrase Generator</h1>
-            <button id="generateButton" class="generate-button" onclick="generateWord()">Generate</button>
-        </div>
-        <div class="header-bottom">
-            <button class="clear-button" onclick="clearData()">Clear Colours</button>
-            <button class="clear-words-button" onclick="clearWords()">Clear Phrases</button>
+
+    <!-- SECTION 1: WORD -->
+    <div class="section words">
+        <h2>1. Word</h2>
+        <div class="row">
+            <div id="wordDisplay" class="word-display empty">Press Generate Word</div>
+            <button class="green" onclick="generateWord()">Generate Word</button>
         </div>
     </div>
-    <div id="countryList" class="country-list"></div>
+
+    <!-- SECTION 2: QUESTIONS (5W + 1H based on the word) -->
+    <div class="section questions">
+        <div class="row" style="justify-content: space-between;">
+            <h2>2. Questions (5W1H)</h2>
+            <button class="blue" onclick="generateQuestions()">New Questions</button>
+        </div>
+        <div id="qList" class="q-list"></div>
+    </div>
+
 </div>
 
 <script>
-    /*
-    BASE PHRASES - things real people type into a search box or chat.
-    Each one gets damaged by the mutation engine below before it is shown.
-    */
-    const wordBank = {
-        en: { flag: "EN", topics: [
-            ["why is my phone battery draining so fast","how to check which apps use the most battery","is it bad to charge my phone overnight","how much does a new phone battery cost"],
-            ["where can i buy cheap flights to bali","best time of year to visit bali","do i need a visa for bali","how many days is enough for bali"],
-            ["why does my dog keep scratching his ears","dog ear infection symptoms","how much does a vet visit cost","can i clean my dogs ears at home"],
-            ["how to write a cover letter for a job","what to put in a cover letter with no experience","how long should a resume be","how to ask for a salary in an interview"],
-            ["how to lose weight without going to the gym","how many calories should i eat a day","best home workout for beginners","how long does it take to see results"],
-            ["why is my wifi so slow","how to make my wifi signal stronger","should i buy a wifi extender","how to change my wifi password"],
-            ["what should i cook for dinner tonight","easy chicken recipes for beginners","how long to bake chicken thighs","what side dish goes with roasted chicken"],
-            ["what to do when you cant sleep at night","why do i wake up at 3am every night","is melatonin safe to take every day","how many hours of sleep do i need"],
-            ["why is my laptop running so slow","how to clear storage on windows 11","how to speed up startup","is it worth upgrading to an ssd"],
-            ["how to grow tomatoes on a balcony","how often should i water tomato plants","why are my tomato leaves turning yellow","when are tomatoes ready to pick"],
-            ["what is a good gift for my mother","gift ideas for mom under 50","how to wrap a gift nicely","what to write in a birthday card for mom"],
-            ["how do i reset my password","i forgot my email password what now","how to turn on two step verification","how to check if my account was hacked"],
-            ["what are the symptoms of a cold","how long does a cold usually last","is it flu or just a cold","when should i see a doctor for a cough"]
-        ]},
-        zh: { flag: "ZH", topics: [
-            ["为什么我的手机电池掉得这么快","怎么查看哪个应用最耗电","晚上充电对电池不好吗","换手机电池大概多少钱"],
-            ["哪里可以买到便宜的机票","去日本旅游最好什么时候去","去日本需要办签证吗","东京五天四晚怎么安排"],
-            ["晚上睡不着觉怎么办","为什么我每天凌晨三点会醒","褪黑素可以每天吃吗","成年人每天需要睡几个小时"],
-            ["怎么写求职信","简历应该写几页","面试时怎么谈薪资","没有工作经验怎么找工作"],
-            ["不去健身房怎么减肥","每天应该吃多少卡路里","新手在家怎么锻炼","多久能看到效果"]
-        ]}
+    /* No storage, no history: everything resets when the page reloads. */
+
+    // SECTION 1 - words (everyday things that work with all 6 question types)
+    const WORDS = [
+        "phone battery","wifi router","laptop","umbrella","bicycle","melatonin","tomato plant","cover letter",
+        "resume","passport","visa","vitamin D","coffee","green tea","air fryer","rice cooker","electric fan",
+        "air conditioner","power bank","earphones","sunscreen","yoga","meditation","credit card","insurance",
+        "savings account","password manager","two step verification","external hard drive","SSD","keyboard",
+        "backpack","running shoes","sleeping bag","tent","dog vaccine","cat food","houseplant","compost",
+        "solar panel","electric car","scooter","drone","smartwatch","e-book reader","microwave","blender",
+        "mattress","pillow","protein powder","stretching","vinegar","baking soda","olive oil","sourdough bread"
+    ];
+
+    // SECTION 2 - question templates, several variants per W so they don't repeat
+    const TEMPLATES = {
+        What:  ["what is {w}", "what does {w} do", "what is {w} used for", "what is the best {w}"],
+        Why:   ["why is {w} important", "why do people use {w}", "why is {w} so expensive", "why is my {w} not working"],
+        Who:   ["who invented {w}", "who needs {w}", "who sells {w}", "who should not use {w}"],
+        When:  ["when was {w} invented", "when should i use {w}", "when to replace {w}", "when is the best time to buy {w}"],
+        Where: ["where to buy {w}", "where did {w} come from", "where can i learn about {w}", "where to get {w} cheap"],
+        How:   ["how to use {w}", "how does {w} work", "how much does {w} cost", "how to choose {w}"]
     };
-    // mostly English, Chinese only now and then (0.15 = about 1 in 7)
-    const CHINESE_CHANCE = 0.15;
+    const ORDER = ["What", "Why", "Who", "When", "Where", "How"];
+
+    let currentWord = null;
 
     function randomFrom(list) { return list[Math.floor(Math.random() * list.length)]; }
     function randInt(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
 
-    /*
-    MUTATIONS - make the phrase look like something a real person
-    left unfinished or typed too fast.
-    */
+    /* HUMAN ERRORS - typos, missing letters/words, cut-off, wrong caps */
     const keyNeighbours = {
         a:"sq",b:"vn",c:"xv",d:"sf",e:"wr",f:"dg",g:"fh",h:"gj",i:"uo",j:"hk",k:"jl",l:"k",m:"n",
         n:"bm",o:"ip",p:"o",q:"w",r:"et",s:"ad",t:"ry",u:"yi",v:"cb",w:"qe",x:"zc",y:"tu",z:"x"
     };
-
     function pickWordIndex(words, minLen) {
         const ok = words.map((w, i) => w.length >= minLen ? i : -1).filter(i => i >= 0);
         return ok.length ? randomFrom(ok) : -1;
     }
-
-    const latinMutations = {
-        dropWord(text) {
-            const w = text.split(" ");
+    const mistakes = {
+        dropWord(t) {
+            const w = t.split(" ");
             if (w.length < 4) return null;
             w.splice(randInt(1, w.length - 1), 1);
             return w.join(" ");
         },
-        dropLetter(text) {
-            const w = text.split(" "), i = pickWordIndex(w, 4);
+        dropLetter(t) {
+            const w = t.split(" "), i = pickWordIndex(w, 4);
             if (i < 0) return null;
             const p = randInt(1, w[i].length - 1);
             w[i] = w[i].slice(0, p) + w[i].slice(p + 1);
             return w.join(" ");
         },
-        swapLetters(text) {
-            const w = text.split(" "), i = pickWordIndex(w, 4);
+        swapLetters(t) {
+            const w = t.split(" "), i = pickWordIndex(w, 4);
             if (i < 0) return null;
             const p = randInt(0, w[i].length - 2), c = w[i].split("");
             [c[p], c[p + 1]] = [c[p + 1], c[p]];
             w[i] = c.join("");
             return w.join(" ");
         },
-        doubleLetter(text) {
-            const w = text.split(" "), i = pickWordIndex(w, 3);
+        doubleLetter(t) {
+            const w = t.split(" "), i = pickWordIndex(w, 3);
             if (i < 0) return null;
             const p = randInt(0, w[i].length - 1);
             w[i] = w[i].slice(0, p) + w[i][p] + w[i].slice(p);
             return w.join(" ");
         },
-        wrongKey(text) {
-            const w = text.split(" "), i = pickWordIndex(w, 3);
+        wrongKey(t) {
+            const w = t.split(" "), i = pickWordIndex(w, 3);
             if (i < 0) return null;
             const p = randInt(0, w[i].length - 1), ch = w[i][p].toLowerCase();
             if (!keyNeighbours[ch]) return null;
             w[i] = w[i].slice(0, p) + randomFrom(keyNeighbours[ch].split("")) + w[i].slice(p + 1);
             return w.join(" ");
         },
-        cutOff(text) {
-            // incomplete - stops mid-way, sometimes mid-word
-            if (text.length < 14) return null;
-            return text.slice(0, randInt(Math.ceil(text.length * 0.65), text.length - 3)).trimEnd();
+        cutOff(t) {
+            if (t.length < 14) return null;
+            return t.slice(0, randInt(Math.ceil(t.length * 0.65), t.length - 3)).trimEnd();
         },
-        cutWords(text) {
-            const w = text.split(" ");
+        cutWords(t) {
+            const w = t.split(" ");
             if (w.length < 4) return null;
             return w.slice(0, randInt(Math.ceil(w.length * 0.65), w.length - 1)).join(" ");
         }
     };
 
-    const chineseMutations = {
-        dropChar(text) {
-            const c = Array.from(text);
-            if (c.length < 6) return null;
-            c.splice(randInt(1, c.length - 2), 1);
-            return c.join("");
-        },
-        swapChars(text) {
-            const c = Array.from(text);
-            if (c.length < 6) return null;
-            const p = randInt(0, c.length - 2);
-            [c[p], c[p + 1]] = [c[p + 1], c[p]];
-            return c.join("");
-        },
-        cutOff(text) {
-            const c = Array.from(text);
-            if (c.length < 6) return null;
-            return c.slice(0, randInt(Math.ceil(c.length * 0.65), c.length - 1)).join("");
-        }
-    };
-
-    function mutatePhrase(text, lang) {
-        const set = lang === "zh" ? chineseMutations : latinMutations;
-        let result = text;
+    function humanize(text) {
+        // missing caps: most people type everything lowercase, even names like SSD
+        let result = Math.random() < 0.8 ? text.toLowerCase() : text;
         const passes = Math.random() < 0.35 ? 2 : 1;
         // a cut-off phrase already looks incomplete, so never stack it with a second mistake
-        const names = Object.keys(set).filter(n => passes === 1 || !/^cut/.test(n));
+        const names = Object.keys(mistakes).filter(n => passes === 1 || !/^cut/.test(n));
         const used = new Set();
-
         for (let n = 0; n < passes; n++) {
             for (let tries = 0; tries < 8; tries++) {
                 const name = randomFrom(names);
                 if (used.has(name)) continue;
-                const out = set[name](result);
+                const out = mistakes[name](result);
                 if (out && out !== result) { result = out; used.add(name); break; }
             }
         }
-
-        if (lang !== "zh") {
-            // real users are inconsistent with caps and question marks
-            const cut = used.has("cutOff") || used.has("cutWords");
-            if (!cut && Math.random() < 0.3) result += "?";
-            if (Math.random() < 0.2) result = result.charAt(0).toUpperCase() + result.slice(1);
-        }
+        const cut = used.has("cutOff") || used.has("cutWords");
+        if (!cut && Math.random() < 0.3) result += "?";               // inconsistent question marks
+        if (Math.random() < 0.2) result = result.charAt(0).toUpperCase() + result.slice(1); // sometimes capital first letter
         return result;
     }
 
-    /*
-    CONTENT FILTER
-    */
-    const bannedSubstrings = [
-        "sex","porn","fuck","fuk","fck","shit","cunt","cock","dick","penis","vagina","boob","tit","nude",
-        "naked","rape","slut","whore","bitch","biatch","hoe","xxx","anal","orgasm","cum","jizz","clit",
-        "smut","erotic","fetish","incest","milf","nsfw"
-    ];
-    function containsBannedSubstring(text) {
-        const lower = text.toLowerCase();
-        return bannedSubstrings.some(sub => lower.includes(sub));
+    function generateWord() {
+        let w;
+        do { w = randomFrom(WORDS); } while (w === currentWord && WORDS.length > 1);
+        currentWord = w;
+        const d = document.getElementById("wordDisplay");
+        d.textContent = w;
+        d.classList.remove("empty");
+        generateQuestions();
     }
 
-    /*
-    SETTINGS - history is capped at 10: slot 0 = newest (tall), slots 1-9 = older
-    */
-    const capacity = 10;
-    const countryList = document.getElementById("countryList");
-
-    /*
-    TIME SETTINGS
-    */
-    const ONE_HOUR = 60 * 60 * 1000;
-    const RED_END = 4 * ONE_HOUR;
-    const ORANGE_END = RED_END + 24 * ONE_HOUR;
-    const YELLOW_END = ORANGE_END + 24 * ONE_HOUR;
-    const LIGHT_YELLOW_END = YELLOW_END + 24 * ONE_HOUR;
-
-    /*
-    STORAGE (new keys so old single-word data doesn't mix in)
-    */
-    const STORAGE_KEY = "phraseGenClickedTimes";
-    const WORDS_KEY = "phraseGenGenerated";
-    const LANGS_KEY = "phraseGenLangs";
-
-    function safeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
-    function safeSet(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
-    function safeRemove(key) { try { localStorage.removeItem(key); } catch (e) {} }
-
-    function getClickedTimes() {
-        const s = safeGet(STORAGE_KEY);
-        if (!s) return {};
-        try { return JSON.parse(s) || {}; } catch (e) { return {}; }
-    }
-    function saveClickedTimes(t) { safeSet(STORAGE_KEY, JSON.stringify(t)); }
-
-    function loadSlots(key) {
-        const out = new Array(capacity).fill(null);
-        const s = safeGet(key);
-        if (!s) return out;
-        try {
-            const parsed = JSON.parse(s);
-            if (Array.isArray(parsed)) for (let i = 0; i < Math.min(parsed.length, capacity); i++) out[i] = parsed[i];
-        } catch (e) {}
-        return out;
-    }
-
-    let generatedWords = loadSlots(WORDS_KEY);
-    let generatedLangs = loadSlots(LANGS_KEY);
-
-
-    function getWordStatus(word, clickedTimes) {
-        if (!word || !clickedTimes[word]) return "normal";
-        const elapsed = Date.now() - clickedTimes[word];
-        if (elapsed >= LIGHT_YELLOW_END) return "normal";
-        if (elapsed < RED_END) return "red";
-        if (elapsed < ORANGE_END) return "orange";
-        if (elapsed < YELLOW_END) return "yellow";
-        return "light-yellow";
-    }
-
-    function applyWordStatus(button, status) {
-        button.classList.remove("status-red", "status-orange", "status-yellow", "status-light-yellow");
-        if (status !== "normal") button.classList.add("status-" + status);
-        button.disabled = false;
-    }
-
-    /*
-    DISPLAY
-    */
-    function showWords() {
-        countryList.innerHTML = "";
-        const clickedTimes = getClickedTimes();
-        const cells = [];
-        for (let i = 0; i < capacity; i++) cells.push({ index: i, single: i === 0 });
-
-        cells.forEach(cell => {
-            const word = generatedWords[cell.index];
-            const lang = generatedLangs[cell.index];
-            const button = document.createElement("button");
-            button.className = "country-button";
-            if (cell.single) button.classList.add("single-slot");
-
-            if (word) {
-                const wordSpan = document.createElement("span");
-                wordSpan.className = "word-text";
-                wordSpan.innerText = word;
-                button.appendChild(wordSpan);
-
-                button.dataset.word = word;
-                applyWordStatus(button, getWordStatus(word, clickedTimes));
-                button.onclick = function () { copyWord(button, word, wordSpan); };
-            } else {
-                button.classList.add("empty");
-                button.disabled = true;
+    function generateQuestions() {
+        const list = document.getElementById("qList");
+        list.innerHTML = "";
+        ORDER.forEach(type => {
+            const b = document.createElement("button");
+            b.className = "q-btn";
+            if (!currentWord) {
+                b.disabled = true;
+                b.innerHTML = '<span class="tag">' + type + '</span><span class="txt">-</span>';
+                list.appendChild(b);
+                return;
             }
-            countryList.appendChild(button);
+            const q = humanize(randomFrom(TEMPLATES[type]).replace("{w}", currentWord));
+            b.innerHTML = '<span class="tag">' + type + '</span>';
+            const t = document.createElement("span");
+            t.className = "txt";
+            t.textContent = q;
+            b.appendChild(t);
+            b.onclick = () => searchQuestion(b, q, t);
+            list.appendChild(b);
         });
     }
 
-    /*
-    GENERATE - phrases come in groups of 4 that belong together, like one
-    person's search session: the 1st opens a topic, the 2nd-4th follow up on it.
-    The group position is remembered, so the 4th phrase always completes the
-    same topic as the previous 3. Then a new topic starts.
-    */
-    const GROUP_KEY = "phraseGenGroup";
-    const GROUP_SIZE = 4;
-
-    function loadGroup() {
-        try {
-            const g = JSON.parse(safeGet(GROUP_KEY));
-            if (g && wordBank[g.lang] && wordBank[g.lang].topics[g.topic] && g.step >= 0 && g.step <= GROUP_SIZE) return g;
-        } catch (e) {}
-        return null;
-    }
-
-    function nextGroupPick() {
-        const prev = loadGroup();
-        if (prev && prev.step < GROUP_SIZE) return prev;
-
-        const lang = Math.random() < CHINESE_CHANCE ? "zh" : "en";
-        const count = wordBank[lang].topics.length;
-        let topic;
-        do { topic = randInt(0, count - 1); }
-        while (prev && prev.lang === lang && prev.topic === topic && count > 1);
-        return { lang, topic, step: 0 };
-    }
-
-    function generateWord() {
-        const used = new Set(generatedWords.filter(w => w !== null));
-        const g = nextGroupPick();
-        const base = wordBank[g.lang].topics[g.topic][g.step];
-
-        let newWord = null;
-        for (let attempts = 0; attempts < 30; attempts++) {
-            const candidate = mutatePhrase(base, g.lang);
-            if (!used.has(candidate) && !containsBannedSubstring(candidate)) { newWord = candidate; break; }
-        }
-
-        if (!newWord) { window.alert("Couldn't come up with a suitable phrase - try again."); return; }
-
-        safeSet(GROUP_KEY, JSON.stringify({ lang: g.lang, topic: g.topic, step: g.step + 1 }));
-
-        generatedWords.unshift(newWord); generatedWords.pop();
-        generatedLangs.unshift(g.lang); generatedLangs.pop();
-        safeSet(WORDS_KEY, JSON.stringify(generatedWords));
-        safeSet(LANGS_KEY, JSON.stringify(generatedLangs));
-
-        showWords();
-
-        // Auto: copy the new phrase + open a new tab and search it (same as clicking the bubble)
-        const newButton = countryList.firstElementChild;
-        const newSpan = newButton && newButton.querySelector(".word-text");
-        if (newButton && newSpan) copyWord(newButton, newWord, newSpan);
-    }
-
-    /*
-    COPY
-    */
-    function copyTextFallback(text) {
+    // click a question: copy it + open a new tab searching it
+    function copyFallback(text) {
         try {
             const ta = document.createElement("textarea");
             ta.value = text;
             ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
             document.body.appendChild(ta);
             ta.focus(); ta.select();
-            const ok = document.execCommand("copy");
+            document.execCommand("copy");
             document.body.removeChild(ta);
-            return ok;
-        } catch (e) { return false; }
+        } catch (e) {}
     }
 
-    function copyWord(button, word, wordSpan) {
-        const times = getClickedTimes();
-        times[word] = Date.now();
-        saveClickedTimes(times);
-
-        // Copy the phrase to the clipboard.
+    function searchQuestion(button, q, span) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(word).catch(() => copyTextFallback(word));
+            navigator.clipboard.writeText(q).catch(() => copyFallback(q));
         } else {
-            copyTextFallback(word);
+            copyFallback(q);
         }
-
-        // Open a new tab and search the phrase automatically.
-        // A normal webpage cannot send Ctrl+T / Ctrl+V / Enter to Chrome's UI,
-        // so use a Google search URL instead.
-        const searchUrl = "https://www.google.com/search?q=" + encodeURIComponent(word);
-        window.open(searchUrl, "_blank", "noopener,noreferrer");
-
-        const original = wordSpan.innerText;
-        wordSpan.innerText = "Searching!";
-        applyWordStatus(button, "red");
-        setTimeout(() => { wordSpan.innerText = original; }, 1000);
+        window.open("https://www.google.com/search?q=" + encodeURIComponent(q), "_blank", "noopener,noreferrer");
+        button.classList.add("done");
+        span.textContent = "Searching!";
+        setTimeout(() => { span.textContent = q; }, 1000);
     }
 
-    /*
-    CLEAR
-    */
-    function clearData() {
-        if (!window.confirm("Clear colour data? Every bubble's colour goes back to normal (phrases stay put).")) return;
-        safeRemove(STORAGE_KEY);
-        showWords();
-    }
-
-    function clearWords() {
-        if (!window.confirm("Clear all generated phrases? This will empty every bubble.")) return;
-        safeRemove(WORDS_KEY);
-        safeRemove(LANGS_KEY);
-        safeRemove(GROUP_KEY);
-        generatedWords = new Array(capacity).fill(null);
-        generatedLangs = new Array(capacity).fill(null);
-        showWords();
-    }
-
-    function updateAllWordStatuses() {
-        const times = getClickedTimes();
-        document.querySelectorAll(".country-button:not(.empty)").forEach(button => {
-            const word = button.dataset.word;
-            const span = button.querySelector(".word-text");
-            if (!word || (span && span.innerText === "Copied!")) return;
-            applyWordStatus(button, getWordStatus(word, times));
-        });
-    }
-
-    showWords();
-    setInterval(updateAllWordStatuses, 60 * 1000);
+    generateQuestions(); // empty placeholders at start
 </script>
 </body>
 </html>
